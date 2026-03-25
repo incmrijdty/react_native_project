@@ -3,7 +3,7 @@ import { Expense } from "../features/expenses/expenseTypes";
 
 interface Props {
     expense: Expense,
-    onDelete: (id:string) => void;
+    onDelete: (id: string) => void;
 }
 
 export default function ExpenseCard({ expense, onDelete }: Props) {

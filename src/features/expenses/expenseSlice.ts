@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Expense } from "./expenseTypes";
+import { act } from "react";
 
 interface ExpensesState {
   items: Expense[];
@@ -23,9 +24,13 @@ const expensesSlice = createSlice({
         (expense) => expense.id !== action.payload
       );
     },
+
+    setExpenses: (state, action) => {
+      state.items = action.payload;
+    }
   },
 });
 
-export const { addExpense, deleteExpense } = expensesSlice.actions;
+export const { addExpense, deleteExpense, setExpenses } = expensesSlice.actions;
 
 export default expensesSlice.reducer;
