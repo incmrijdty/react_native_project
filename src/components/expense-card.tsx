@@ -1,21 +1,24 @@
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
 import { Expense } from "../features/expenses/expenseTypes";
 
 interface Props {
     expense: Expense,
     onDelete: (id: string) => void;
+    onPress?: () => void;
 }
 
-export default function ExpenseCard({ expense, onDelete }: Props) {
+export default function ExpenseCard({ expense, onDelete, onPress }: Props) {
     return (  //change $?
         <View style={styles.card}>
-            <Text style={styles.title}>{expense.title}</Text> 
+            <TouchableOpacity onPress={onPress}>
+                <Text style={styles.title}>{expense.title}</Text> 
 
-            <Text>${expense.amount}</Text> 
+                <Text>${expense.amount}</Text> 
 
-            <Text>{expense.category}</Text>
+                <Text>{expense.category}</Text>
 
-            <Button title="Delete" onPress={() => onDelete(expense.id)} />
+                <Button title="Delete" onPress={() => onDelete(expense.id)} />
+            </TouchableOpacity>
         </View>
     );
 }

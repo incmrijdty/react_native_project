@@ -18,6 +18,11 @@ export default function ExpensesScreen() {
     dispatch(deleteExpense(id));
   }
 
+  function handlePress(id: string) {
+    // later: navigate to details
+    console.log("Pressed expense:", id);
+  }
+
   useEffect(() => {
     if (!loaded) return;
     
@@ -34,8 +39,12 @@ export default function ExpensesScreen() {
   }, []);
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <ExpenseList expense={expenses} onDelete={handleDelete} />
+    <View style={{ flex: 1, padding: 16 }}>
+      <ExpenseList 
+        expenses={expenses} 
+        onDelete={handleDelete}
+        onPress={handlePress}
+      />
     </View>
   );
 }
