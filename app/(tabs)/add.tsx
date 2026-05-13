@@ -3,6 +3,7 @@ import { useAppDispatch } from "@/src/store/hooks";
 import { addExpense } from "@/src/features/expenses/expenseSlice";
 import { useState, useEffect } from "react";
 import { router, useLocalSearchParams } from "expo-router";
+import * as ImagePicker from 'expo-image-picker';
 
 export default function AddExpense() {
     const dispatch = useAppDispatch();
@@ -11,6 +12,24 @@ export default function AddExpense() {
     const [title, setTitle] = useState('');
     const [amount, setAmount] = useState('');
     const [category, setCategory] = useState("");
+
+    const pickImage = async () => {
+        const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (!permission.granted) {
+            alert("Permission to access gallery is required!");
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ['images'],
+            quality: 0.7,
+            allowsEditing: true,
+        });
+
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+        }
+    }
 
     useEffect(() => {
         if (params.image) {
@@ -76,6 +95,12 @@ export default function AddExpense() {
                     title="Add Receipt Photo"
                     onPress={() => router.push("/camera")}
                 />
+
+                <Button
+                    title="Pick from Gallery"
+                    onPress={pickImage}
+                />
+
                 <Button title="Add Expense" onPress={handleSave} />
             </View>
         </View>
