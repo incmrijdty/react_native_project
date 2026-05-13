@@ -1,15 +1,22 @@
-import { View, Text, Button, TextInput } from "react-native";
+import { View, Text, Button, TextInput, Image } from "react-native";
 import { useAppDispatch } from "@/src/store/hooks";
 import { addExpense } from "@/src/features/expenses/expenseSlice";
-import { useState } from "react";
-import { router } from "expo-router";
+import { useState, useEffect } from "react";
+import { router, useLocalSearchParams } from "expo-router";
 
 export default function AddExpense() {
     const dispatch = useAppDispatch();
-
+    const params = useLocalSearchParams<{image?: string}>();
+    const [image, setImage] = useState<string | null>(null);
     const [title, setTitle] = useState('');
     const [amount, setAmount] = useState('');
     const [category, setCategory] = useState("");
+
+    useEffect(() => {
+        if (params.image) {
+            setImage(params.image);
+        }
+    }, [params.image])
 
     const handleSave = () => {
         if (!title || !amount) return;
@@ -22,14 +29,16 @@ export default function AddExpense() {
                 category: category || "general",
                 date: new Date().toISOString(),
                 currency: "USD",
+                image: image || undefined,
             })
         );
 
         setTitle("");
         setAmount("");
         setCategory("");
+        setImage("");
 
-        router.back();
+        router.replace("/");
     }
 
     return (
@@ -59,8 +68,16 @@ export default function AddExpense() {
                 style={{ borderWidth: 1, marginBottom: 12 }}
             />
 
-
-            <Button title="Add Expense" onPress={handleSave} />
+            {image && (
+                <Image source={{ uri: image }} style= {{ height: 100 }} />
+            )}
+            <View style={{ gap: 10, padding: 10 }}>
+                <Button 
+                    title="Add Receipt Photo"
+                    onPress={() => router.push("/camera")}
+                />
+                <Button title="Add Expense" onPress={handleSave} />
+            </View>
         </View>
     );
 }
