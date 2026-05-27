@@ -1,5 +1,7 @@
 import { View } from "react-native";
 import { useEffect, useState } from "react";
+import { router } from "expo-router";
+
 import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 import { deleteExpense, setExpenses } from "@/src/features/expenses/expenseSlice";
 import ExpenseList from "@/src/components/expense-list";
@@ -19,8 +21,7 @@ export default function ExpensesScreen() {
   }
 
   function handlePress(id: string) {
-    // later: navigate to details
-    console.log("Pressed expense:", id);
+    router.push(`../expense/${id}`);
   }
 
   useEffect(() => {

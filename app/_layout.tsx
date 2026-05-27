@@ -12,7 +12,16 @@ export default function RootLayout() {
         <Stack.Screen
           name="camera"
           options={{
-            presentation: 'modal'
+            presentation: 'modal',
+            headerShown: false
+          }}
+        />
+
+        <Stack.Screen
+          name="expense/[id]"
+          options={{
+            animation: 'slide_from_right',
+            headerShown: false
           }}
         />
         

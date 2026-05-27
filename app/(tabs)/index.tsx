@@ -1,8 +1,10 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
+import { useEffect, useState } from "react";
+import { router } from "expo-router";
+
 import { useAppSelector, useAppDispatch } from "@/src/store/hooks";
 import ExpenseList from "@/src/components/expense-list";
 import { deleteExpense, setExpenses } from "@/src/features/expenses/expenseSlice";
-import { useEffect, useState } from "react";
 import { loadExpenses, saveExpenses } from "@/src/services/storage";
 
 
@@ -34,8 +36,7 @@ export default function Dashboard() {
   }
 
   function handlePress(id: string) {
-    // later: navigate to details
-    console.log("Pressed expense:", id);
+    router.push(`../expense/${id}`);
   }
 
   return (
