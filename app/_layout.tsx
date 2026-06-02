@@ -1,32 +1,56 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Provider } from "react-redux";
-import { store } from "../src/store/store";
+import { useEffect } from "react";
+
+import { supabase } from "@/src/lib/supabase";
+import { store } from "@/src/store/store";
+import { AuthProvider } from "@/src/context/AuthContext";
 
 export default function RootLayout() {
+  
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log(event);
+        console.log(session);
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
   return (
     <Provider store={store}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <AuthProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
-        <Stack.Screen
-          name="camera"
-          options={{
-            presentation: 'modal',
-            headerShown: false
-          }}
-        />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
 
-        <Stack.Screen
-          name="expense/[id]"
-          options={{
-            animation: 'slide_from_right',
-            headerShown: false
-          }}
-        />
-        
-      </Stack>
-      <StatusBar style="auto" />
+          <Stack.Screen
+            name="camera"
+            options={{
+              presentation: 'modal',
+              headerShown: false
+            }}
+          />
+
+          <Stack.Screen
+            name="expense/[id]"
+            options={{
+              animation: 'slide_from_right',
+              headerShown: false
+            }}
+          />
+
+        </Stack>
+        <StatusBar style="auto" />
+      </AuthProvider>
     </Provider>
   );
 }

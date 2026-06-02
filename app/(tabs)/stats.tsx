@@ -1,10 +1,17 @@
 import { View, Text } from "react-native";
+import { useEffect } from "react";
+
+import { testConnection } from "@/src/services/testSupabase";
 import { useAppSelector } from "@/src/store/hooks";
 
 export default function StatsScreen() {
   const expenses = useAppSelector((state) => state.expenses.items)
 
   const total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+  
+  useEffect(() => {
+    testConnection();
+  }, []);
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
