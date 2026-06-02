@@ -1,4 +1,4 @@
-import { View, Text, Button } from "react-native";
+import { View, Text } from "react-native";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 
@@ -49,16 +49,6 @@ export default function Dashboard() {
       expenses={expenses.slice(-3).reverse()}  //change to sorting by data later
       onDelete={handleDelete}
       onPress={handlePress}
-      />
-
-      <Button
-        title="Login"
-        onPress={() => router.push("/(auth)/login")}
-      />
-
-      <Button
-        title="Register"
-        onPress={() => router.push("/(auth)/register")}
       />
     </View>
   );
