@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Image } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { View, Text, StyleSheet, Image, Button } from "react-native";
+import { useLocalSearchParams, router } from "expo-router";
 import { useAppSelector } from "@/src/store/hooks";
 
 export default function ExpenseDetailsScreen() {
@@ -33,12 +33,19 @@ export default function ExpenseDetailsScreen() {
                 })}
             </Text>
 
-            {expense.image && (
+            {expense.imageUrl && (
                 <Image
-                    source={{ uri: expense.image }}
+                    source={{ uri: expense.imageUrl }}
                     style={styles.image}
                 />
             )}
+
+            <Button
+                title="Edit Expense"
+                onPress={() =>
+                    router.push(`./edit/${expense.id}`)
+                }
+            />
         </View>
     );
 }

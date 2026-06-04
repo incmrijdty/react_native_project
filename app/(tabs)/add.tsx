@@ -4,6 +4,8 @@ import { addExpense } from "@/src/features/expenses/expenseSlice";
 import { useState, useEffect } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import * as ImagePicker from 'expo-image-picker';
+import { useAuth } from "@/src/context/AuthContext";
+import { createExpenseForCurrentUser } from "@/src/services/expenseService";
 
 export default function AddExpense() {
     const dispatch = useAppDispatch();
@@ -12,6 +14,8 @@ export default function AddExpense() {
     const [title, setTitle] = useState('');
     const [amount, setAmount] = useState('');
     const [category, setCategory] = useState("");
+
+    const { user } = useAuth();
 
     const pickImage = async () => {
         const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -37,25 +41,34 @@ export default function AddExpense() {
         }
     }, [params.image])
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!title || !amount) return;
-        
-        dispatch(
-            addExpense({
-                id: Date.now().toString(),
-                title,
-                amount: parseFloat(amount),
-                category: category || "general",
-                date: new Date().toISOString(),
-                currency: "USD",
-                image: image || undefined,
-            })
+
+        const newExpense = {
+            id: Date.now().toString(),
+            title,
+            amount: parseFloat(amount),
+            category: category || "general",
+            date: new Date().toISOString(),
+            currency: "USD",
+            imageUrl: image || undefined,
+        };
+
+        const result = await createExpenseForCurrentUser(
+            newExpense,
+            user?.id
         );
 
+        if (user?.id && result?.data) {
+            newExpense.id = result.data.id;
+        }
+
+        dispatch(addExpense(newExpense));
+        
         setTitle("");
         setAmount("");
         setCategory("");
-        setImage("");
+        setImage(null);
 
         router.replace("/");
     }

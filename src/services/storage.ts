@@ -26,3 +26,11 @@ export const loadExpenses = async (): Promise<Expense[]> => {
         return [];
     }
 };
+
+export const clearGuestExpenses = async () => {
+    try {
+        await AsyncStorage.removeItem(EXPENSES_KEY);
+    } catch (error) {
+        console.log("Error clearing expenses", error);
+    }
+}

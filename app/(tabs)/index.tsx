@@ -1,11 +1,11 @@
 import { View, Text } from "react-native";
-import { useEffect, useState } from "react";
 import { router } from "expo-router";
 
 import { useAppSelector, useAppDispatch } from "@/src/store/hooks";
 import ExpenseList from "@/src/components/expense-list";
-import { deleteExpense, setExpenses } from "@/src/features/expenses/expenseSlice";
-import { loadExpenses, saveExpenses } from "@/src/services/storage";
+import { deleteExpense } from "@/src/features/expenses/expenseSlice";
+import { deleteExpenseForCurrentUser } from "@/src/services/expenseService";
+import { useAuth } from "@/src/context/AuthContext";
 
 
 export default function Dashboard() {
@@ -14,24 +14,11 @@ export default function Dashboard() {
   );
   const dispatch = useAppDispatch();
   const total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-  const [loaded, setLoaded] = useState(false);
+  const { user } = useAuth();
 
-  useEffect(() => { // think of the way to make it into another file so that this screena nd dashboard wouldnt repeat each other
-      if (!loaded) return;
-      
-      saveExpenses(expenses);
-    }, [expenses]);
-  
-    useEffect(() => {
-      const fetchExpenses = async () => {
-        const storedExpenses = await loadExpenses();
-        dispatch(setExpenses(storedExpenses));
-        setLoaded(true);
-      };
-      fetchExpenses();
-    }, []);
-
-  function handleDelete(id: string) {
+  async function handleDelete(id: string) {
+    await deleteExpenseForCurrentUser(id, user?.id);
+    
     dispatch(deleteExpense(id));
   }
 

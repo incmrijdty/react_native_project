@@ -27,10 +27,20 @@ const expensesSlice = createSlice({
 
     setExpenses: (state, action) => {
       state.items = action.payload;
+    },
+    
+    updateExpense: (state, action: PayloadAction<Expense>) => {
+      const index = state.items.findIndex(
+        expense => expense.id === action.payload.id
+      );
+
+      if (index !== -1) {
+        state.items[index] = action.payload;
+      }
     }
   },
 });
 
-export const { addExpense, deleteExpense, setExpenses } = expensesSlice.actions;
+export const { addExpense, deleteExpense, setExpenses, updateExpense } = expensesSlice.actions;
 
 export default expensesSlice.reducer;

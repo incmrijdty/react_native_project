@@ -5,5 +5,5 @@ export interface Expense {
   category: string; //user
   date: string;
   currency: string; //user later
-  image?: string; //user
+  imageUrl?: string; //user
 }
