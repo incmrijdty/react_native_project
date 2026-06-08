@@ -6,6 +6,7 @@ import ExpenseList from "@/src/components/expense-list";
 import { deleteExpense } from "@/src/features/expenses/expenseSlice";
 import { deleteExpenseForCurrentUser } from "@/src/services/expenseService";
 import { useAuth } from "@/src/context/AuthContext";
+import { ui } from "@/src/styles/uiStyles";
 
 
 export default function Dashboard() {
@@ -27,16 +28,18 @@ export default function Dashboard() {
   }
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <Text style={{ fontSize: 24, fontWeight: 'bold'}}>Total: ${total.toFixed(2)}</Text>
+    <View style={ui.screen}>
+      <View style={ui.container}>
+        <Text style={ui.title}>Total: ${total.toFixed(2)}</Text>
 
-      <Text style={{ marginTop: 16, fontSize: 18}}>Recent Expenses</Text>
+        <Text style={ui.subtitle}>Recent Expenses</Text>
 
-      <ExpenseList 
-      expenses={expenses.slice(-3).reverse()}  
-      onDelete={handleDelete}
-      onPress={handlePress}
-      />
+        <ExpenseList
+          expenses={expenses.slice(-3).reverse()}
+          onDelete={handleDelete}
+          onPress={handlePress}
+        />
+      </View>
     </View>
   );
 }

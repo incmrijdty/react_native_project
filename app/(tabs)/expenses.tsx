@@ -1,4 +1,4 @@
-import { Alert, View } from "react-native";
+import { Alert, View, Text, ScrollView } from "react-native";
 import { router } from "expo-router";
 
 import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
@@ -6,6 +6,7 @@ import { deleteExpense } from "@/src/features/expenses/expenseSlice";
 import ExpenseList from "@/src/components/expense-list";
 import { useAuth } from "@/src/context/AuthContext";
 import { deleteExpenseForCurrentUser } from "@/src/services/expenseService";
+import { ui } from "@/src/styles/uiStyles";
 
 export default function ExpensesScreen() {
   const dispatch = useAppDispatch();
@@ -30,12 +31,15 @@ export default function ExpensesScreen() {
   }
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <ExpenseList 
-        expenses={expenses} 
-        onDelete={handleDelete}
-        onPress={handlePress}
-      />
+    <View style={ui.screen}>
+      <View style={ui.container}>
+        <Text style={ui.title}>Your Expenses</Text>
+        <ExpenseList
+          expenses={expenses}
+          onDelete={handleDelete}
+          onPress={handlePress}
+        />
+      </View>
     </View>
   );
 }

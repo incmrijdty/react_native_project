@@ -2,11 +2,12 @@ import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 import { useLocalSearchParams, router } from "expo-router";
 import { useState }from "react";
 import * as ImagePicker from 'expo-image-picker';
-import { View, Text, TextInput, Button, Alert, Image } from "react-native";
+import { View, Text, TextInput, Button, Alert, Image, TouchableOpacity } from "react-native";
 import { useAuth } from "@/src/context/AuthContext";
 import { uploadReceipt, deleteReceipt } from "@/src/services/storageApi";
 import { updateExpenseForCurrentUser } from "@/src/services/expenseService";
 import { updateExpense } from "@/src/features/expenses/expenseSlice";
+import { ui } from "@/src/styles/uiStyles";
 
 export default function EditExpenseScreen() {
     const { id } = useLocalSearchParams();
@@ -114,63 +115,51 @@ export default function EditExpenseScreen() {
     }
 
     return (
-        <View
-            style={{
-                flex: 1,
-                padding: 16,
-                gap: 12,
-            }}
-        >
-            <Text>Title</Text>
-            <TextInput
-                value={title}
-                onChangeText={setTitle}
-                style={{
-                    borderWidth: 1,
-                    padding: 10,
-                }}
-            />
-
-            <Text>Amount</Text>
-            <TextInput
-                value={amount}
-                onChangeText={setAmount}
-                keyboardType="numeric"
-                style={{
-                    borderWidth: 1,
-                    padding: 10,
-                }}
-            />
-
-            <Text>Category</Text>
-            <TextInput
-                value={category}
-                onChangeText={setCategory}
-                style={{
-                    borderWidth: 1,
-                    padding: 10,
-                }}
-            />
-
-            {image && (
-                <Image
-                    source={{ uri: image }}
-                    style={{
-                        width: "100%",
-                        height: 200,
-                    }}
+        <View style={ui.screen}>
+            <View style={ui.container}>
+                <Text>Title</Text>
+                <TextInput
+                    value={title}
+                    onChangeText={setTitle}
+                    placeholderTextColor="#777"
+                    style={ui.input}
                 />
-            )}
 
-            <Button
-                title="Change Receipt"
-                onPress={pickImage}
-            />
+                <Text>Amount</Text>
+                <TextInput
+                    value={amount}
+                    onChangeText={setAmount}
+                    keyboardType="numeric"
+                    placeholderTextColor="#777"
+                    style={ui.input}
+                />
 
-            <Button
-                title={loading ? "Saving..." : "Save Changes"}
-                onPress={handleSave}
-            />
+                <Text>Category</Text>
+                <TextInput
+                    value={category}
+                    onChangeText={setCategory}
+                    placeholderTextColor="#777"
+                    style={ui.input}
+                />
+
+                {image && (
+                    <Image
+                        source={{ uri: image }}
+                        style={{
+                            width: "100%",
+                            height: 200,
+                        }}
+                    />
+                )}
+
+                <TouchableOpacity style={ui.buttonPrimary} onPress={pickImage}>
+                    <Text style={ui.buttonText}>Change receipt</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={ui.buttonPrimary} onPress={handleSave}>
+                    <Text style={ui.buttonText}>Save changes</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }

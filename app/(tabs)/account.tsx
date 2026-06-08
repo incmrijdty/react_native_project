@@ -1,8 +1,9 @@
-import { View, Text, Button } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 
 import { useAuth } from "@/src/context/AuthContext";
 import { signOut } from "@/src/services/auth";
+import { ui } from "@/src/styles/uiStyles";
 
 export default function AccountScreen() {
   const { user, loading } = useAuth();
@@ -24,41 +25,36 @@ export default function AccountScreen() {
   }
 
   return (
-    <View
-      style={{
-        flex: 1,
-        padding: 16,
-        gap: 12,
-      }}
-    >
-      {!user ? (
-        <>
-          <Text>You are not logged in.</Text>
+    <View style={ui.screen}>
+      <View style={ui.container}>
+        <Text style={ui.title}>Account</Text>
+        {!user ? (
+          <>
+            <Text style={ui.title}>Account</Text>
+            <Text style={ui.subtitle}>You are not logged in.</Text>
 
-          <Button
-            title="Login"
-            onPress={() => router.push("/(auth)/login")}
-          />
+            <TouchableOpacity style={ui.buttonPrimary} onPress={() => router.push("/(auth)/login")}>
+              <Text style={ui.buttonText}>Login</Text>
+            </TouchableOpacity>
 
-          <Button
-            title="Register"
-            onPress={() => router.push("/(auth)/register")}
-          />
-        </>
-      ) : (
-        <>
-          <Text>Logged in as:</Text>
+            <TouchableOpacity style={ui.buttonPrimary} onPress={() => router.push("/(auth)/register")}>
+              <Text style={ui.buttonText}>Register</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <Text style={ui.subtitle}>Logged in as:</Text>
 
-          <Text>{user.email}</Text>
+            <Text style={ui.subtitle}>{user.email}</Text>
 
-          <Text>Status: Connected to cloud sync</Text>
+            <Text style={ui.subtitle}>Status: Connected to cloud sync</Text>
 
-          <Button
-            title="Logout"
-            onPress={handleLogout}
-          />
-        </>
-      )}
+            <TouchableOpacity style={ui.buttonPrimary} onPress={handleLogout}>
+              <Text style={ui.buttonText}>Logout</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
     </View>
   );
 }

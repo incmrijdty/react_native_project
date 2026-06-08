@@ -54,6 +54,7 @@ export default function RootLayout() {
               name="expense/edit/[id]"
               options={{
                 animation: "slide_from_right",
+                headerShown: false
               }}
             />
 

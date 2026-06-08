@@ -27,6 +27,31 @@ export const Colors = {
   },
 };
 
+export const AppTheme = {
+  dark: {
+    background: "#0F172A",     
+    card: "#172033",
+    cardAlt: "#1E293B",
+
+    text: "#E6EDF7",
+    textMuted: "#94A3B8",
+
+    primary: "#2375CB",
+    primarySoft: "rgba(35, 117, 203, 0.15)",
+
+    border: "#2B3A55",
+    danger: "#EF4444",
+  }
+};
+
+export const Spacing = {
+  xs: 6,
+  sm: 10,
+  md: 16,
+  lg: 24,
+  xl: 32,
+};
+
 export const Fonts = Platform.select({
   ios: {
     /** iOS `UIFontDescriptorSystemDesignDefault` */

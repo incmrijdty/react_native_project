@@ -1,4 +1,4 @@
-import { View, Text, Button, TextInput, Image, Alert } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, Image, Alert } from "react-native";
 import { useAppDispatch } from "@/src/store/hooks";
 import { addExpense } from "@/src/features/expenses/expenseSlice";
 import { useState, useEffect } from "react";
@@ -7,6 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from "@/src/context/AuthContext";
 import { createExpenseForCurrentUser } from "@/src/services/expenseService";
 import { uploadReceipt } from "@/src/services/storageApi";
+import { ui } from "@/src/styles/uiStyles";
 
 export default function AddExpense() {
     const dispatch = useAppDispatch();
@@ -102,51 +103,56 @@ export default function AddExpense() {
     };
 
     return (
-        <View style={{ flex: 1, padding: 16 }}>
-            <Text>Title</Text>
-            <TextInput
-                value={title}
-                onChangeText={setTitle}
-                placeholder="Enter title"
-                style={{ borderWidth: 1, marginBottom: 12 }}
-            />
-
-            <Text>Amount</Text>
-            <TextInput
-                value={amount}
-                onChangeText={setAmount}
-                keyboardType="numeric"
-                placeholder="Enter amount"
-                style={{ borderWidth: 1, marginBottom: 12 }}
-            />
-
-            <Text>Category</Text>
-            <TextInput 
-                value={category}
-                onChangeText={setCategory}
-                placeholder="Enter category"
-                style={{ borderWidth: 1, marginBottom: 12 }}
-            />
-
-            {image && (
-                <Image source={{ uri: image }} style= {{ height: 100 }} />
-            )}
-            <View style={{ gap: 10, padding: 10 }}>
-                <Button 
-                    title="Add Receipt Photo"
-                    onPress={() => router.push("/camera")}
+        <View style={ui.screen}>
+            <View style={ui.container}>
+                <Text style={ui.title}>Add an expense</Text>
+                <Text style={ui.subtitle}>Title</Text>
+                <TextInput
+                    value={title}
+                    onChangeText={setTitle}
+                    placeholder="Enter title"
+                    placeholderTextColor="#777"
+                    style={ui.input}
                 />
 
-                <Button
-                    title="Pick from Gallery"
-                    onPress={pickImage}
+                <Text>Amount</Text>
+                <TextInput
+                    value={amount}
+                    onChangeText={setAmount}
+                    keyboardType="numeric"
+                    placeholder="Enter amount"
+                    placeholderTextColor="#777"
+                    style={ui.input}
                 />
 
-                <Button 
-                    title={loading ? "Saving" : "Add Expense"} 
-                    onPress={handleSave}
-                    disabled={loading} 
+                <Text>Category</Text>
+                <TextInput
+                    value={category}
+                    onChangeText={setCategory}
+                    placeholder="Enter category"
+                    placeholderTextColor="#777"
+                    style={ui.input}
                 />
+
+                {image && (
+                    <Image source={{ uri: image }} style={{ height: 250 }} />
+                )}
+                <View style={{ gap: 10, padding: 10 }}>
+                    <TouchableOpacity style={ui.buttonPrimary} onPress={() => router.push("/camera")}>
+                        <Text style={ui.buttonText}>Add a receipt</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={ui.buttonPrimary} onPress={pickImage}>
+                        <Text style={ui.buttonText}>Pick from Galery</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={ui.buttonPrimary}
+                        onPress={handleSave}
+                        disabled={loading}>
+                        <Text style={ui.buttonText}>Add an expense</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );

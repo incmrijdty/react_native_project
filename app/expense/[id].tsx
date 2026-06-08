@@ -1,6 +1,8 @@
-import { View, Text, StyleSheet, Image, Button } from "react-native";
+import { View, Text, StyleSheet, Image, Button, TouchableOpacity } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { useAppSelector } from "@/src/store/hooks";
+import { AppTheme, Spacing } from "@/constants/theme";
+import { ui } from "@/src/styles/uiStyles";
 
 export default function ExpenseDetailsScreen() {
     const { id } = useLocalSearchParams();
@@ -17,68 +19,73 @@ export default function ExpenseDetailsScreen() {
         );
     }
 
-    console.log("DETAIL EXPENSE");
-    console.log(expense);
-    console.log("IMAGE URL", expense.imageUrl);
-
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>{expense.title}</Text>
+        <View style={ui.screen}>
+            <View style={ui.container}>
+                <Text style={ui.title}>Expense Details</Text>
 
-            <Text style={styles.amount}>{expense.currency}{expense.amount}</Text>
+                <Text style={styles.title}>{expense.title}</Text>
 
-            <Text style={styles.label}>{expense.category}</Text>
+                <Text style={ui.subtitle}>{expense.currency} {expense.amount}</Text>
 
-            <Text style={styles.label}>
-                {new Date(expense.date).toLocaleDateString("en-GB", {
-                    day: "2-digit",
-                    month: "short",
-                    year: "numeric",
-                })}
-            </Text>
+                <Text style={ui.subtitle}>{expense.category}</Text>
 
-            {expense.imageUrl && (
-                <Image
-                    source={{ uri: expense.imageUrl }}
-                    style={styles.image}
-                />
-            )}
+                <Text style={ui.subtitle}>
+                    {new Date(expense.date).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                    })}
+                </Text>
 
-            <Button
-                title="Edit Expense"
-                onPress={() =>
-                    router.push(`./edit/${expense.id}`)
-                }
-            />
+                {expense.imageUrl && (
+                    <Image
+                        source={{ uri: expense.imageUrl }}
+                        style={styles.image}
+                    />
+                )}
+
+                <TouchableOpacity 
+                    style={ui.buttonPrimary} 
+                    onPress={() => router.push(`./edit/${expense.id}`)}>
+                        <Text style={ui.buttonText}>Edit Expense</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: '#fff',
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        marginBottom: 12,
-    },
-    amount: {
-        fontSize: 24,
-        marginBottom: 12
-    },
-    label: {
-        fontSize: 18,
-        marginBottom: 8
-    },
-    image: {
-        width: '100%',
-        height: 250,
-        marginTop: 20,
-        borderRadius: 12
-    }
-})
+  container: {
+    flex: 1,
+    backgroundColor: AppTheme.dark.background,
+    padding: Spacing.lg,
+  },
 
+  title: {
+    fontSize: 28,
+    fontWeight: "800",
+    color: AppTheme.dark.text,
+  },
+
+  amount: {
+    fontSize: 22,
+    color: AppTheme.dark.primary,
+    marginVertical: 12,
+    fontWeight: "700",
+  },
+
+  label: {
+    fontSize: 14,
+    color: AppTheme.dark.textMuted,
+    marginBottom: 6,
+  },
+
+  image: {
+    width: "100%",
+    height: 350,
+    borderRadius: 16,
+    marginTop: 20,
+  },
+});

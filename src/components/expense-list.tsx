@@ -1,6 +1,7 @@
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import { Expense } from "../features/expenses/expenseTypes";
 import ExpenseCard from "./expense-card";
+import { ui } from "../styles/uiStyles";
 
 interface Props {
     expenses: Expense[];
@@ -10,15 +11,17 @@ interface Props {
 
 export default function ExpenseList({ expenses, onDelete, onPress }: Props) {
     return (
-        <FlatList
-            data={expenses}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-                <ExpenseCard 
-                    expense={item} 
-                    onDelete={onDelete}
-                    onPress={() => onPress(item.id)} />
-            )}
-        />
+        <View style={ui.container}>
+            <FlatList
+                data={expenses}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                    <ExpenseCard
+                        expense={item}
+                        onDelete={onDelete}
+                        onPress={() => onPress(item.id)} />
+                )}
+            />
+        </View>
     );
 }
