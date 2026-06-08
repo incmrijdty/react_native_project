@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { router } from "expo-router";
 
 import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
@@ -16,9 +16,13 @@ export default function ExpensesScreen() {
   );
 
   async function handleDelete(id: string, imageUrl?: string) {
-    await deleteExpenseForCurrentUser(id, user?.id, imageUrl);
-        
-    dispatch(deleteExpense(id));
+    try {
+      await deleteExpenseForCurrentUser(id, user?.id, imageUrl);
+
+      dispatch(deleteExpense(id));
+    } catch {
+        Alert.alert("Error", "Could not delete expense")
+    }
   }
 
   function handlePress(id: string) {

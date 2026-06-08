@@ -33,7 +33,7 @@ export default function Dashboard() {
       <Text style={{ marginTop: 16, fontSize: 18}}>Recent Expenses</Text>
 
       <ExpenseList 
-      expenses={expenses.slice(-3).reverse()}  //change to sorting by data later
+      expenses={expenses.slice(-3).reverse()}  
       onDelete={handleDelete}
       onPress={handlePress}
       />

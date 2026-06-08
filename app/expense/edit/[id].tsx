@@ -13,6 +13,8 @@ export default function EditExpenseScreen() {
     const { user } = useAuth();
     const dispatch = useAppDispatch();
 
+    const [loading, setLoading] = useState(false);
+
     const expense = useAppSelector(state => 
         state.expenses.items.find(
             (item) => item.id === id
@@ -39,61 +41,60 @@ export default function EditExpenseScreen() {
         }
     }
 
-    async function handleSave() {
-        if (!title || !amount) {
-            Alert.alert(
-                "Validation",
-                "Title and amount are required."
-            );
-            return;
-        }
+    async function handleSave() {   
+        try {  
+            setLoading(true);
 
-        if (!expense) {
-            return (
-                <View style={{ padding: 20 }}>
-                    <Text>Expense not found.</Text>
-                </View>
-            )
-        }
-
-        let uploadedImageUrl = image;
-
-        if (
-            image &&
-            user &&
-            image.startsWith("file://")
-        ) {
-            const result =
-                await uploadReceipt(
-                    image,
-                    user.id
+            if (!title || !amount) {
+                Alert.alert(
+                    "Validation",
+                    "Title and amount are required."
                 );
-
-            if (result.data) {
-                uploadedImageUrl =
-                    result.data;
+                return;
             }
-        }
 
-        if (
-            expense.imageUrl &&
-            expense.imageUrl !== uploadedImageUrl &&
-            expense.imageUrl.startsWith("http")
-        ) {
-            await deleteReceipt(
-                expense.imageUrl
-            );
-        }
+            if (!expense) {
+                Alert.alert("Error", "Expense not found.");
+                return;
+            }
 
-        const updatedExpense = {
-            ...expense,
-            title,
-            amount: Number(amount),
-            category, 
-            imageUrl: uploadedImageUrl ?? undefined
-        };
+            let uploadedImageUrl = image;
 
-        try {
+            if (
+                image &&
+                user &&
+                image.startsWith("file://")
+            ) {
+                const result =
+                    await uploadReceipt(
+                        image,
+                        user.id
+                    );
+
+                if (result.data) {
+                    uploadedImageUrl =
+                        result.data;
+                }
+            }
+
+            if (
+                expense.imageUrl &&
+                expense.imageUrl !== uploadedImageUrl &&
+                expense.imageUrl.startsWith("http")
+            ) {
+                await deleteReceipt(
+                    expense.imageUrl
+                );
+            }
+
+            const updatedExpense = {
+                ...expense,
+                title,
+                amount: Number(amount),
+                category,
+                imageUrl: uploadedImageUrl ?? undefined
+            };
+
             await updateExpenseForCurrentUser(
                 updatedExpense,
                 user?.id,
@@ -104,8 +105,11 @@ export default function EditExpenseScreen() {
             );
 
             router.back();
-        } catch (error) {
-            console.log(error);
+        }  catch (error) {
+            console.log("SAVE  ERROR:", error);
+            Alert.alert("Error", "Could not update expense");
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -164,7 +168,7 @@ export default function EditExpenseScreen() {
             />
 
             <Button
-                title="Save Changes"
+                title={loading ? "Saving..." : "Save Changes"}
                 onPress={handleSave}
             />
         </View>

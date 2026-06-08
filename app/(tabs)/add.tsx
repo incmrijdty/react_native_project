@@ -1,4 +1,4 @@
-import { View, Text, Button, TextInput, Image } from "react-native";
+import { View, Text, Button, TextInput, Image, Alert } from "react-native";
 import { useAppDispatch } from "@/src/store/hooks";
 import { addExpense } from "@/src/features/expenses/expenseSlice";
 import { useState, useEffect } from "react";
@@ -15,6 +15,7 @@ export default function AddExpense() {
     const [title, setTitle] = useState('');
     const [amount, setAmount] = useState('');
     const [category, setCategory] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const { user } = useAuth();
 
@@ -42,54 +43,63 @@ export default function AddExpense() {
         }
     }, [params.image])
 
+
     const handleSave = async () => {
-        if (!title || !amount) return;
+        try {
+            setLoading(true);
 
-        let uploadedImageUrl = image;
+            if (!title || !amount) return;
 
-        if (image && user) {
-            const result = 
-                await uploadReceipt(
-                    image,
-                    user.id
-                );
+            let uploadedImageUrl = image;
 
-            console.log("UPLOAD RESULT");
-            console.log(result);
+            if (image && user) {
+                const result =
+                    await uploadReceipt(
+                        image,
+                        user.id
+                    );
 
-            if (result.data) {
-                uploadedImageUrl = result.data;
+                console.log("UPLOAD RESULT");
+                console.log(result);
+
+                if (result.data) {
+                    uploadedImageUrl = result.data;
+                }
             }
+
+            const newExpense = {
+                id: Date.now().toString(),
+                title,
+                amount: parseFloat(amount),
+                category: category || "general",
+                date: new Date().toISOString(),
+                currency: "USD",
+                imageUrl: uploadedImageUrl || undefined,
+            };
+
+            const result = await createExpenseForCurrentUser(
+                newExpense,
+                user?.id
+            );
+
+            if (user?.id && result?.data) {
+                newExpense.id = result.data.id;
+            }
+
+            dispatch(addExpense(newExpense));
+
+            setTitle("");
+            setAmount("");
+            setCategory("");
+            setImage(null);
+
+            router.replace("/");
+        } catch (error) {
+            Alert.alert("Error", "Could not save expense");
+        } finally {
+            setLoading(false);
         }
-
-        const newExpense = {
-            id: Date.now().toString(),
-            title,
-            amount: parseFloat(amount),
-            category: category || "general",
-            date: new Date().toISOString(),
-            currency: "USD",
-            imageUrl: uploadedImageUrl || undefined,
-        };
-
-        const result = await createExpenseForCurrentUser(
-            newExpense,
-            user?.id
-        );
-
-        if (user?.id && result?.data) {
-            newExpense.id = result.data.id;
-        }
-
-        dispatch(addExpense(newExpense));
-        
-        setTitle("");
-        setAmount("");
-        setCategory("");
-        setImage(null);
-
-        router.replace("/");
-    }
+    };
 
     return (
         <View style={{ flex: 1, padding: 16 }}>
@@ -132,7 +142,11 @@ export default function AddExpense() {
                     onPress={pickImage}
                 />
 
-                <Button title="Add Expense" onPress={handleSave} />
+                <Button 
+                    title={loading ? "Saving" : "Add Expense"} 
+                    onPress={handleSave}
+                    disabled={loading} 
+                />
             </View>
         </View>
     );
