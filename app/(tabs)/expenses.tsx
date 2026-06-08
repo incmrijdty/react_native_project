@@ -15,8 +15,8 @@ export default function ExpensesScreen() {
     (state) => state.expenses.items
   );
 
-  async function handleDelete(id: string) {
-    await deleteExpenseForCurrentUser(id, user?.id);
+  async function handleDelete(id: string, imageUrl?: string) {
+    await deleteExpenseForCurrentUser(id, user?.id, imageUrl);
         
     dispatch(deleteExpense(id));
   }

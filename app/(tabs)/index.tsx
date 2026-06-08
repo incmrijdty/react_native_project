@@ -16,8 +16,8 @@ export default function Dashboard() {
   const total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
   const { user } = useAuth();
 
-  async function handleDelete(id: string) {
-    await deleteExpenseForCurrentUser(id, user?.id);
+  async function handleDelete(id: string, imageUrl?: string) {
+    await deleteExpenseForCurrentUser(id, user?.id, imageUrl);
     
     dispatch(deleteExpense(id));
   }

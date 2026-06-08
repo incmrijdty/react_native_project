@@ -17,6 +17,11 @@ export default function ExpenseDetailsScreen() {
         );
     }
 
+    console.log("DETAIL EXPENSE");
+    console.log(expense);
+    console.log("IMAGE URL", expense.imageUrl);
+
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>{expense.title}</Text>

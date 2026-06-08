@@ -8,7 +8,13 @@ export async function fetchExpenses(userId: string) {
         .eq("user_id", userId)
         .order("date", { ascending: false }); 
 
-    return { data, error };
+        const mappedData =
+        data?.map((expense) => ({
+            ...expense,
+            imageUrl: expense.image_url,
+        })) ?? [];
+
+    return { data: mappedData, error };
 }
 
 export async function createExpense(

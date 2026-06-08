@@ -2,6 +2,7 @@ import { Expense } from "../features/expenses/expenseTypes";
 
 import { loadExpenses, saveExpenses } from "./storage";
 import { createExpense, deleteExpenseCloud, updateExpenseCloud } from "./expenseApi";
+import { deleteReceipt } from "./storageApi";
 
 export async function createExpenseForCurrentUser(
     expense: Expense,
@@ -28,13 +29,23 @@ export async function createExpenseForCurrentUser(
 
 export async function deleteExpenseForCurrentUser(
     expenseId: string,
-    userId?: string
+    userId?: string,
+    imageUrl?: string
 ) {
     if (!userId) {
         return
     };
 
-    await deleteExpenseCloud(expenseId);
+    if (
+        imageUrl &&
+        imageUrl.startsWith("https")
+    ) {
+        await deleteReceipt(imageUrl);
+    }
+
+    return await deleteExpenseCloud(
+        expenseId
+    );
 }
 
 export async function updateExpenseForCurrentUser(

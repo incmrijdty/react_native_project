@@ -6,6 +6,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import * as ImagePicker from 'expo-image-picker';
 import { useAuth } from "@/src/context/AuthContext";
 import { createExpenseForCurrentUser } from "@/src/services/expenseService";
+import { uploadReceipt } from "@/src/services/storageApi";
 
 export default function AddExpense() {
     const dispatch = useAppDispatch();
@@ -44,6 +45,23 @@ export default function AddExpense() {
     const handleSave = async () => {
         if (!title || !amount) return;
 
+        let uploadedImageUrl = image;
+
+        if (image && user) {
+            const result = 
+                await uploadReceipt(
+                    image,
+                    user.id
+                );
+
+            console.log("UPLOAD RESULT");
+            console.log(result);
+
+            if (result.data) {
+                uploadedImageUrl = result.data;
+            }
+        }
+
         const newExpense = {
             id: Date.now().toString(),
             title,
@@ -51,7 +69,7 @@ export default function AddExpense() {
             category: category || "general",
             date: new Date().toISOString(),
             currency: "USD",
-            imageUrl: image || undefined,
+            imageUrl: uploadedImageUrl || undefined,
         };
 
         const result = await createExpenseForCurrentUser(

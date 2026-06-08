@@ -1,8 +1,10 @@
 import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 import { useLocalSearchParams, router } from "expo-router";
-import { useState } from "react";
-import { View, Text, TextInput, Button, Alert } from "react-native";
+import { useState }from "react";
+import * as ImagePicker from 'expo-image-picker';
+import { View, Text, TextInput, Button, Alert, Image } from "react-native";
 import { useAuth } from "@/src/context/AuthContext";
+import { uploadReceipt, deleteReceipt } from "@/src/services/storageApi";
 import { updateExpenseForCurrentUser } from "@/src/services/expenseService";
 import { updateExpense } from "@/src/features/expenses/expenseSlice";
 
@@ -20,6 +22,22 @@ export default function EditExpenseScreen() {
     const [title, setTitle] = useState(expense?.title ?? '');
     const [amount, setAmount] = useState(expense?.amount.toString() ?? '');
     const [category, setCategory] = useState(expense?.category ?? '');
+    const [image, setImage] = useState(expense?.imageUrl ?? null)
+
+    const pickImage = async () => {
+        const result =
+            await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ['images'],
+                quality: 0.7,
+                allowsEditing: true,
+            });
+
+        if (!result.canceled) {
+            setImage(
+                result.assets[0].uri
+            );
+        }
+    }
 
     async function handleSave() {
         if (!title || !amount) {
@@ -38,11 +56,41 @@ export default function EditExpenseScreen() {
             )
         }
 
+        let uploadedImageUrl = image;
+
+        if (
+            image &&
+            user &&
+            image.startsWith("file://")
+        ) {
+            const result =
+                await uploadReceipt(
+                    image,
+                    user.id
+                );
+
+            if (result.data) {
+                uploadedImageUrl =
+                    result.data;
+            }
+        }
+
+        if (
+            expense.imageUrl &&
+            expense.imageUrl !== uploadedImageUrl &&
+            expense.imageUrl.startsWith("http")
+        ) {
+            await deleteReceipt(
+                expense.imageUrl
+            );
+        }
+
         const updatedExpense = {
             ...expense,
             title,
             amount: Number(amount),
-            category
+            category, 
+            imageUrl: uploadedImageUrl ?? undefined
         };
 
         try {
@@ -70,7 +118,6 @@ export default function EditExpenseScreen() {
             }}
         >
             <Text>Title</Text>
-
             <TextInput
                 value={title}
                 onChangeText={setTitle}
@@ -81,7 +128,6 @@ export default function EditExpenseScreen() {
             />
 
             <Text>Amount</Text>
-
             <TextInput
                 value={amount}
                 onChangeText={setAmount}
@@ -93,7 +139,6 @@ export default function EditExpenseScreen() {
             />
 
             <Text>Category</Text>
-
             <TextInput
                 value={category}
                 onChangeText={setCategory}
@@ -101,6 +146,21 @@ export default function EditExpenseScreen() {
                     borderWidth: 1,
                     padding: 10,
                 }}
+            />
+
+            {image && (
+                <Image
+                    source={{ uri: image }}
+                    style={{
+                        width: "100%",
+                        height: 200,
+                    }}
+                />
+            )}
+
+            <Button
+                title="Change Receipt"
+                onPress={pickImage}
             />
 
             <Button
