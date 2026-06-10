@@ -71,7 +71,7 @@ export default function Dashboard() {
 
   return (
     <View style={ui.screen}>
-      <View style={ui.container}>
+
         <Text style={ui.title}>Your Expense Tracker</Text>
 
         <Text style={ui.subtitle}>Total: {total.toFixed(2)}zl</Text>
@@ -83,7 +83,6 @@ export default function Dashboard() {
           onDelete={handleDelete}
           onPress={handlePress}
         />
-      </View>
     </View>
   );
 }

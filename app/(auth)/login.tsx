@@ -26,7 +26,7 @@ export default function LoginScreen() {
     }, [user, loading]);
 
     return (
-        <View style={ui.screen}>
+        <View style={ui.screenCentered}>
             <View style={ui.container}>
                 <Text style={ui.title}>Login</Text>
 

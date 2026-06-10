@@ -6,13 +6,24 @@ export const ui = StyleSheet.create({
     flex: 1,
     backgroundColor: AppTheme.dark.background,
     padding: 20,
+    justifyContent: "flex-start",
+  },
+
+  screenCentered: {
+    flex: 1,
+    backgroundColor: AppTheme.dark.background,
+    padding: 20,
     justifyContent: "center",
+  },
+
+  scrollContent: {
+    padding: 20,
+    paddingBottom: 50,
   },
 
   container: {
     width: "100%",
     maxWidth: 420,
-    alignSelf: "center",
   },
 
   title: {
@@ -21,7 +32,7 @@ export const ui = StyleSheet.create({
     color: AppTheme.dark.text,
     marginBottom: 24,
     letterSpacing: 0.5,
-    marginTop: 100
+    marginTop: 24
   },
 
   subtitle: {

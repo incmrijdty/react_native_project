@@ -11,7 +11,6 @@ interface Props {
 
 export default function ExpenseList({ expenses, onDelete, onPress }: Props) {
     return (
-        <View style={ui.container}>
             <FlatList
                 data={expenses}
                 keyExtractor={(item) => item.id}
@@ -22,6 +21,5 @@ export default function ExpenseList({ expenses, onDelete, onPress }: Props) {
                         onPress={() => onPress(item.id)} />
                 )}
             />
-        </View>
     );
 }

@@ -1,7 +1,9 @@
 import { View, Text, ScrollView, Dimensions } from "react-native";
 import { PieChart, LineChart } from "react-native-chart-kit";
+
 import { useAppSelector } from "@/src/store/hooks";
 import { ui } from "@/src/styles/uiStyles";
+import { AppTheme } from "@/constants/theme";
 
 export default function StatsScreen() {
   const expenses = useAppSelector((state) => state.expenses.items)
@@ -9,6 +11,8 @@ export default function StatsScreen() {
   const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
 
   const screenWidth = Dimensions.get("window"). width;
+
+  const chartWidth = Math.min(screenWidth - 40, 420);
 
   const categoryTotals = expenses.reduce(
     (acc, expense) => {
@@ -119,12 +123,11 @@ export default function StatsScreen() {
 
   return (
     <ScrollView
-      contentContainerStyle={[
-        ui.screen,
-        {
-          paddingBottom: 50,
-        }
-      ]}
+      style={{
+        flex: 1,
+        backgroundColor: AppTheme.dark.background,
+      }}
+      contentContainerStyle={ui.scrollContent}
     >
       <View style={ui.container}>
         <Text style={ui.title}>
@@ -169,7 +172,7 @@ export default function StatsScreen() {
         {pieData.length > 0 && (
           <PieChart
             data={pieData}
-            width={screenWidth - 40}
+            width={chartWidth}
             height={220}
             chartConfig={chartConfig}
             accessor="amount"
