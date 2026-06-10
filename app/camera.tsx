@@ -1,7 +1,9 @@
-import { View, Button, Image, Alert } from "react-native";
+import { View, Button, Image, Alert, Text } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera"
 import { useRef, useState, useCallback } from "react";
 import { useRouter, useFocusEffect } from "expo-router";
+import { ui } from "@/src/styles/uiStyles";
+import { TouchableOpacity } from "react-native";
 
 export default function CameraScreen() {
     const [permission, requestPermission] = useCameraPermissions();
@@ -29,31 +31,48 @@ export default function CameraScreen() {
     };
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={ui.cameraContainer}>
             {photo ? (
                 <>
-                    <Image source={{ uri: photo }} style={{ flex: 1 }} />
-                    <View style={{ gap: 10, padding: 10 }}>
-                        <Button title="Use this photo" onPress={() => {
+                    <Image source={{ uri: photo }} style={ui.cameraContainer} />
+                    <View style={ui.cameraActions}>
+                        <TouchableOpacity style={ui.cameraButton} onPress={() => {
                             router.push({
                                 pathname: "/(tabs)/add",
                                 params: { image: photo }
                             });
-                        }} />
-                        <Button 
-                            title="Retake" 
-                            onPress={() => {
-                                Alert.alert("Retake photo?", "Current photo will be lost", [
-                                    { text: "Cancel" },
-                                    { text: "Retake", onPress: () => setPhoto(null) },
-                                ]);
-                            }} />
+                        }}>
+                            <Text style={ui.buttonText}>Use this photo</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={ui.cameraButton} onPress={() => {
+                            Alert.alert("Retake photo?", "Current photo will be lost", [
+                                { text: "Cancel" },
+                                { text: "Retake", onPress: () => setPhoto(null) },
+                            ]);
+                        }}>
+                            <Text style={ui.buttonText}>Retake</Text>
+                        </TouchableOpacity>
                     </View>
                 </>
             ) : (
-                <CameraView style={{ flex: 1 }} ref={cameraRef}>
-                    <Button title="Take Photo" onPress={takePhoto} />
-                </CameraView> 
+                    <View style={ui.cameraContainer}>
+                        <CameraView
+                            style={ui.camera}
+                            ref={cameraRef}
+                        />
+
+                        <View style={ui.cameraButtonContainer}>
+                            <TouchableOpacity
+                                style={ui.cameraButton}
+                                onPress={takePhoto}
+                            >
+                                <Text style={ui.buttonText}>
+                                    Take Photo
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
             )}
         </View>
     )

@@ -83,4 +83,35 @@ export const ui = StyleSheet.create({
   dangerText: {
     color: AppTheme.dark.danger,
   },
+
+  cameraContainer: {
+    flex: 1
+  },
+
+  camera: {
+    flex: 1,
+  },
+
+  cameraButtonContainer: {
+    position: 'absolute',
+    bottom: 48,
+    alignSelf: 'center'
+  },
+
+  cameraButton: {
+    backgroundColor: AppTheme.dark.primary,
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 999,
+  },
+
+  cameraPreview: {
+    flex: 1
+  },
+
+  cameraActions: {
+    padding: 14,
+    gap: 12,
+    backgroundColor: AppTheme.dark.background,
+  }
 });
