@@ -1,11 +1,17 @@
-import { View, Text, StyleSheet, Image, Button, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, Alert, TouchableOpacity } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
-import { useAppSelector } from "@/src/store/hooks";
-import { AppTheme, Spacing } from "@/constants/theme";
+
+import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
+import { AppTheme } from "@/constants/theme";
 import { ui } from "@/src/styles/uiStyles";
+import { deleteExpense } from "@/src/features/expenses/expenseSlice";
+import { deleteExpenseForCurrentUser } from "@/src/services/expenseService";
+import { useAuth } from "@/src/context/AuthContext";
 
 export default function ExpenseDetailsScreen() {
     const { id } = useLocalSearchParams();
+    const dispatch = useAppDispatch();
+    const { user } = useAuth();
 
     const expense = useAppSelector((state) =>
         state.expenses.items.find((item) => item.id === id)
@@ -13,11 +19,37 @@ export default function ExpenseDetailsScreen() {
 
     if (!expense) {
         return (
-            <View style={styles.container}>
+            <View style={ui.container}>
                 <Text>Expense not found.</Text>
             </View>
         );
     }
+
+    function handleDelete(id: string, imageUrl?: string) {
+        Alert.alert(
+          "Delete expense",
+          "Are you sure you want to delete this expense?",
+          [
+            {
+              text: "Cancel",
+              style: "cancel",
+            },
+            {
+              text: "Delete",
+              style: "destructive",
+              onPress: async () => {
+                await deleteExpenseForCurrentUser(id, user?.id, imageUrl);
+    
+                dispatch(deleteExpense(id));
+
+                router.replace("/");
+    
+              },
+            },
+          ],
+        );
+        
+      }
 
 
     return (
@@ -51,37 +83,23 @@ export default function ExpenseDetailsScreen() {
                     onPress={() => router.push(`./edit/${expense.id}`)}>
                         <Text style={ui.buttonText}>Edit Expense</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity 
+                    style={ui.buttonPrimary} 
+                    onPress={() => handleDelete(expense.id, expense.imageUrl)}>
+                        <Text style={ui.buttonText}>Delete Expense</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: AppTheme.dark.background,
-    padding: Spacing.lg,
-  },
-
   title: {
     fontSize: 28,
     fontWeight: "800",
     color: AppTheme.dark.text,
   },
-
-  amount: {
-    fontSize: 22,
-    color: AppTheme.dark.primary,
-    marginVertical: 12,
-    fontWeight: "700",
-  },
-
-  label: {
-    fontSize: 14,
-    color: AppTheme.dark.textMuted,
-    marginBottom: 6,
-  },
-
   image: {
     width: "100%",
     height: 350,

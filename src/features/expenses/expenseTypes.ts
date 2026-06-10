@@ -4,6 +4,6 @@ export interface Expense {
   amount: number; //user
   category: string; //user
   date: string;
-  currency: string; //user later
+  currency: string; //user 
   imageUrl?: string; //user
 }

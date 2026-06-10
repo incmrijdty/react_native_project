@@ -16,14 +16,28 @@ export default function ExpensesScreen() {
     (state) => state.expenses.items
   );
 
-  async function handleDelete(id: string, imageUrl?: string) {
-    try {
-      await deleteExpenseForCurrentUser(id, user?.id, imageUrl);
+  function handleDelete(id: string, imageUrl?: string) {
+    Alert.alert(
+      "Delete expense",
+      "Are you sure you want to delete this expense?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            await deleteExpenseForCurrentUser(id, user?.id, imageUrl);
 
-      dispatch(deleteExpense(id));
-    } catch {
-        Alert.alert("Error", "Could not delete expense")
-    }
+            dispatch(deleteExpense(id));
+
+          },
+        },
+      ],
+    );
+    
   }
 
   function handlePress(id: string) {
@@ -39,8 +53,7 @@ export default function ExpensesScreen() {
           </Text>
 
           <Text style={ui.subtitle}>
-            Add some expenses to see your
-            spending insights.
+            Here you will find your expenses once you add them.
           </Text>
         </View>
       </View>

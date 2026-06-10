@@ -1,13 +1,16 @@
 import { View, Text, TouchableOpacity, TextInput, Image, Alert } from "react-native";
-import { useAppDispatch } from "@/src/store/hooks";
-import { addExpense } from "@/src/features/expenses/expenseSlice";
 import { useState, useEffect } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import * as ImagePicker from 'expo-image-picker';
+import { Picker } from "@react-native-picker/picker";
+
+import { useAppDispatch } from "@/src/store/hooks";
+import { addExpense } from "@/src/features/expenses/expenseSlice";
 import { useAuth } from "@/src/context/AuthContext";
 import { createExpenseForCurrentUser } from "@/src/services/expenseService";
 import { uploadReceipt } from "@/src/services/storageApi";
 import { ui } from "@/src/styles/uiStyles";
+import { currencies } from "@/constants/currencies";
 
 export default function AddExpense() {
     const dispatch = useAppDispatch();
@@ -17,6 +20,7 @@ export default function AddExpense() {
     const [amount, setAmount] = useState('');
     const [category, setCategory] = useState("");
     const [loading, setLoading] = useState(false);
+    const [currency, setCurrency] = useState("PLN");
 
     const { user } = useAuth();
 
@@ -74,7 +78,7 @@ export default function AddExpense() {
                 amount: parseFloat(amount),
                 category: category || "general",
                 date: new Date().toISOString(),
-                currency: "USD",
+                currency,
                 imageUrl: uploadedImageUrl || undefined,
             };
 
@@ -115,7 +119,7 @@ export default function AddExpense() {
                     style={ui.input}
                 />
 
-                <Text>Amount</Text>
+                <Text style={ui.subtitle}>Amount</Text>
                 <TextInput
                     value={amount}
                     onChangeText={setAmount}
@@ -125,7 +129,21 @@ export default function AddExpense() {
                     style={ui.input}
                 />
 
-                <Text>Category</Text>
+                <Text style={ui.subtitle}>Currency</Text>
+                <Picker 
+                    selectedValue={currency}
+                    onValueChange={setCurrency}
+                >
+                    {currencies.map((item) => (
+                        <Picker.Item
+                            key={item}
+                            label={item}
+                            value={item}
+                        />
+                    ))}
+                </Picker>
+
+                <Text style={ui.subtitle}>Category</Text>
                 <TextInput
                     value={category}
                     onChangeText={setCategory}

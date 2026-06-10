@@ -21,7 +21,7 @@ export default function LoginScreen() {
 
     useEffect(() => {
         if (!loading && user) {
-            router.replace("/account");
+            router.replace("/(tabs)/account");
         }
     }, [user, loading]);
 

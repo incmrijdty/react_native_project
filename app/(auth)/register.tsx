@@ -23,7 +23,7 @@ export default function RegisterScreen() {
 
     useEffect(() => {
         if (!loading && user) {
-            router.replace("/account");
+            router.replace("/(tabs)/account");
         }
     }, [user, loading]);
 

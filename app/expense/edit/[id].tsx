@@ -2,12 +2,15 @@ import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 import { useLocalSearchParams, router } from "expo-router";
 import { useState }from "react";
 import * as ImagePicker from 'expo-image-picker';
-import { View, Text, TextInput, Button, Alert, Image, TouchableOpacity } from "react-native";
+import { Picker } from "@react-native-picker/picker";
+
+import { View, Text, TextInput, Alert, Image, TouchableOpacity } from "react-native";
 import { useAuth } from "@/src/context/AuthContext";
 import { uploadReceipt, deleteReceipt } from "@/src/services/storageApi";
 import { updateExpenseForCurrentUser } from "@/src/services/expenseService";
 import { updateExpense } from "@/src/features/expenses/expenseSlice";
 import { ui } from "@/src/styles/uiStyles";
+import { currencies } from "@/constants/currencies";
 
 export default function EditExpenseScreen() {
     const { id } = useLocalSearchParams();
@@ -24,6 +27,7 @@ export default function EditExpenseScreen() {
 
     const [title, setTitle] = useState(expense?.title ?? '');
     const [amount, setAmount] = useState(expense?.amount.toString() ?? '');
+    const [currency, setCurrency] = useState("PLN");
     const [category, setCategory] = useState(expense?.category ?? '');
     const [image, setImage] = useState(expense?.imageUrl ?? null)
 
@@ -92,6 +96,7 @@ export default function EditExpenseScreen() {
                 ...expense,
                 title,
                 amount: Number(amount),
+                currency,
                 category,
                 imageUrl: uploadedImageUrl ?? undefined
             };
@@ -117,7 +122,7 @@ export default function EditExpenseScreen() {
     return (
         <View style={ui.screen}>
             <View style={ui.container}>
-                <Text>Title</Text>
+                <Text style={ui.subtitle}>Title</Text>
                 <TextInput
                     value={title}
                     onChangeText={setTitle}
@@ -125,7 +130,7 @@ export default function EditExpenseScreen() {
                     style={ui.input}
                 />
 
-                <Text>Amount</Text>
+                <Text style={ui.subtitle}>Amount</Text>
                 <TextInput
                     value={amount}
                     onChangeText={setAmount}
@@ -134,7 +139,21 @@ export default function EditExpenseScreen() {
                     style={ui.input}
                 />
 
-                <Text>Category</Text>
+                <Text style={ui.subtitle}>Currency</Text>
+                <Picker 
+                    selectedValue={currency}
+                    onValueChange={setCurrency}
+                >
+                    {currencies.map((item) => (
+                        <Picker.Item
+                            key={item}
+                            label={item}
+                            value={item}
+                        />
+                    ))}
+                </Picker>
+
+                <Text style={ui.subtitle}>Category</Text>
                 <TextInput
                     value={category}
                     onChangeText={setCategory}

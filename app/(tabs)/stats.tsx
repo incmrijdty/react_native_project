@@ -2,7 +2,6 @@ import { View, Text, ScrollView, Dimensions } from "react-native";
 import { PieChart, LineChart } from "react-native-chart-kit";
 import { useAppSelector } from "@/src/store/hooks";
 import { ui } from "@/src/styles/uiStyles";
-import { Colors } from "@/constants/theme";
 
 export default function StatsScreen() {
   const expenses = useAppSelector((state) => state.expenses.items)
@@ -111,8 +110,7 @@ export default function StatsScreen() {
           </Text>
 
           <Text style={ui.subtitle}>
-            Add some expenses to see your
-            spending insights.
+            No data available yet.
           </Text>
         </View>
       </View>
@@ -134,7 +132,7 @@ export default function StatsScreen() {
         </Text>
 
         <Text style={ui.subtitle}>
-          Total spent: ${total.toFixed(2)}
+          Total spent: {total.toFixed(2)}zl
         </Text>
 
         <Text style={ui.subtitle}>
@@ -142,8 +140,8 @@ export default function StatsScreen() {
         </Text>
 
         <Text style={ui.subtitle}>
-          Average expense: $
-          {averageExpense.toFixed(2)}
+          Average expense:
+          {averageExpense.toFixed(2)} zl
         </Text>
 
         {largestExpense && (
@@ -152,7 +150,7 @@ export default function StatsScreen() {
             {" "}
             {largestExpense.title}
             {" "}
-            (${largestExpense.amount})
+            ({largestExpense.amount}zl)
           </Text>
         )}
 
