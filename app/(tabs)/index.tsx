@@ -25,12 +25,31 @@ export default function Dashboard() {
 
   function handlePress(id: string) {
     router.push(`../expense/${id}`);
+  };
+
+  if (expenses.length === 0) {
+    return (
+      <View style={ui.screen}>
+        <View style={ui.container}>
+          <Text style={ui.title}>
+            Your Expense Tracker
+          </Text>
+
+          <Text style={ui.subtitle}>
+            Add some expenses to see your
+            spending insights.
+          </Text>
+        </View>
+      </View>
+    );
   }
 
   return (
     <View style={ui.screen}>
       <View style={ui.container}>
-        <Text style={ui.title}>Total: ${total.toFixed(2)}</Text>
+        <Text style={ui.title}>Your Expense Tracker</Text>
+
+        <Text style={ui.subtitle}>Total: ${total.toFixed(2)}</Text>
 
         <Text style={ui.subtitle}>Recent Expenses</Text>
 

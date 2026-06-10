@@ -30,6 +30,23 @@ export default function ExpensesScreen() {
     router.push(`../expense/${id}`);
   }
 
+  if (expenses.length === 0) {
+    return (
+      <View style={ui.screen}>
+        <View style={ui.container}>
+          <Text style={ui.title}>
+            Your Expenses
+          </Text>
+
+          <Text style={ui.subtitle}>
+            Add some expenses to see your
+            spending insights.
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View style={ui.screen}>
       <View style={ui.container}>

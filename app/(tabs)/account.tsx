@@ -27,7 +27,6 @@ export default function AccountScreen() {
   return (
     <View style={ui.screen}>
       <View style={ui.container}>
-        <Text style={ui.title}>Account</Text>
         {!user ? (
           <>
             <Text style={ui.title}>Account</Text>
@@ -43,6 +42,7 @@ export default function AccountScreen() {
           </>
         ) : (
           <>
+            <Text style={ui.title}>Account</Text>
             <Text style={ui.subtitle}>Logged in as:</Text>
 
             <Text style={ui.subtitle}>{user.email}</Text>
