@@ -38,7 +38,7 @@ export default function CameraScreen() {
                     <View style={ui.cameraActions}>
                         <TouchableOpacity style={ui.cameraButton} onPress={() => {
                             router.push({
-                                pathname: "/(tabs)/add",
+                                pathname: "/add",
                                 params: { image: photo }
                             });
                         }}>

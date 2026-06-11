@@ -19,12 +19,6 @@ export default function LoginScreen() {
         }
     }
 
-    useEffect(() => {
-        if (!loading && user) {
-            router.replace("/(tabs)/account");
-        }
-    }, [user, loading]);
-
     return (
         <View style={ui.screenCentered}>
             <View style={ui.container}>

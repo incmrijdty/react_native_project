@@ -32,11 +32,11 @@ export default function AccountScreen() {
             <Text style={ui.title}>Account</Text>
             <Text style={ui.subtitle}>You are not logged in.</Text>
 
-            <TouchableOpacity style={ui.buttonPrimary} onPress={() => router.push("/(auth)/login")}>
+            <TouchableOpacity style={ui.buttonPrimary} onPress={() => router.push("/login")}>
               <Text style={ui.buttonText}>Login</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={ui.buttonPrimary} onPress={() => router.push("/(auth)/register")}>
+            <TouchableOpacity style={ui.buttonPrimary} onPress={() => router.push("/register")}>
               <Text style={ui.buttonText}>Register</Text>
             </TouchableOpacity>
           </>
