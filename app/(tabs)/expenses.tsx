@@ -62,14 +62,12 @@ export default function ExpensesScreen() {
 
   return (
     <View style={ui.screen}>
-      <View style={ui.container}>
         <Text style={ui.title}>Your Expenses</Text>
         <ExpenseList
           expenses={expenses}
           onDelete={handleDelete}
           onPress={handlePress}
         />
-      </View>
     </View>
   );
 }

@@ -42,6 +42,7 @@ export function AuthProvider ({
             (_event, session) => {
                 setSession(session);
                 setUser(session?.user ?? null);
+                setLoading(false);
             }
         );
 
