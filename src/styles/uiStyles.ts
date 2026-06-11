@@ -105,13 +105,15 @@ export const ui = StyleSheet.create({
     borderRadius: 999,
   },
 
-  cameraPreview: {
-    flex: 1
-  },
-
   cameraActions: {
     padding: 14,
     gap: 12,
     backgroundColor: AppTheme.dark.background,
+  },
+
+  photo: {
+    height: 250,
+    borderRadius: 12,
+    marginVertical: 12,
   }
 });

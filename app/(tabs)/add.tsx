@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, TextInput, Image, Alert } from "react-native";
+import { View, Text, TouchableOpacity, TextInput, Image, Alert, ScrollView } from "react-native";
 import { useState, useEffect } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import * as ImagePicker from 'expo-image-picker';
@@ -11,6 +11,7 @@ import { createExpenseForCurrentUser } from "@/src/services/expenseService";
 import { uploadReceipt } from "@/src/services/storageApi";
 import { ui } from "@/src/styles/uiStyles";
 import { currencies } from "@/constants/currencies";
+import { AppTheme } from "@/constants/theme";
 
 export default function AddExpense() {
     const dispatch = useAppDispatch();
@@ -53,7 +54,15 @@ export default function AddExpense() {
         try {
             setLoading(true);
 
-            if (!title || !amount) return;
+            if (!title.trim() || !amount.trim()) 
+                {
+                    Alert.alert(
+                        "Required fields",
+                        'Please enter both a title and an amount.'
+                    );
+
+                    return;
+                }
 
             let uploadedImageUrl = image;
 
@@ -64,18 +73,26 @@ export default function AddExpense() {
                         user.id
                     );
 
-                console.log("UPLOAD RESULT");
-                console.log(result);
-
                 if (result.data) {
                     uploadedImageUrl = result.data;
                 }
             }
 
+            const parsedAmount = parseFloat(amount);
+
+            if (isNaN(parsedAmount) || parsedAmount <= 0) {
+                Alert.alert(
+                    "Invalid amount",
+                    "Please enter a valid number greater than 0."
+                );
+
+                return;
+            }
+
             const newExpense = {
                 id: Date.now().toString(),
                 title,
-                amount: parseFloat(amount),
+                amount: parsedAmount,
                 category: category || "general",
                 date: new Date().toISOString(),
                 currency,
@@ -107,7 +124,13 @@ export default function AddExpense() {
     };
 
     return (
-        <View style={ui.screen}>
+        <ScrollView 
+            style={{
+                    flex: 1,
+                    backgroundColor: AppTheme.dark.background,
+                  }}
+            contentContainerStyle={ui.scrollContent}
+        >
             <View style={ui.container}>
                 <Text style={ui.title}>Add an expense</Text>
                 <Text style={ui.subtitle}>Title</Text>
@@ -153,25 +176,71 @@ export default function AddExpense() {
                 />
 
                 {image && (
-                    <Image source={{ uri: image }} style={{ height: 250 }} />
+                    <>
+                        <Image source={{ uri: image }} style={ui.photo} />
+                        <TouchableOpacity
+                            style={[
+                                ui.buttonPrimary,
+                                {
+                                    padding: 10,
+                                }
+                            ]}
+                            onPress={() => {
+                                Alert.alert(
+                                    "Receipt photo",
+                                    "What would you like to do?",
+                                    [
+                                        {
+                                            text: "Keep",
+                                            style: "cancel"
+                                        },
+                                        {
+                                            text: "Retake",
+                                            onPress: () => router.push("/camera")
+                                        },
+                                        {
+                                            text: "Cancel photo",
+                                            style: "destructive",
+                                            onPress: () => setImage(null),
+                                        },
+                                    ]
+                                );
+                            }}
+                        >
+
+                            <Text style={ui.buttonText}>Manage photo</Text>
+                        </TouchableOpacity>
+                    </>
                 )}
-                <View style={{ gap: 10, padding: 10 }}>
-                    <TouchableOpacity style={ui.buttonPrimary} onPress={() => router.push("/camera")}>
+
+                {!image && (
+                    <TouchableOpacity style={ui.buttonPrimary} onPress={() => {
+                        Alert.alert(
+                            "Adding a receipt photo",
+                            "How would you like to add a photo?",
+                            [
+                                {
+                                    text: "Open Camera",
+                                    onPress: () => router.push("/camera")
+                                },
+                                {
+                                    text: "Pick from Galery",
+                                    onPress: pickImage
+                                }
+                            ]
+                        )
+                    }}>
                         <Text style={ui.buttonText}>Add a receipt</Text>
                     </TouchableOpacity>
+                )}
 
-                    <TouchableOpacity style={ui.buttonPrimary} onPress={pickImage}>
-                        <Text style={ui.buttonText}>Pick from Galery</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={ui.buttonPrimary}
-                        onPress={handleSave}
-                        disabled={loading}>
-                        <Text style={ui.buttonText}>Add an expense</Text>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity
+                    style={ui.buttonPrimary}
+                    onPress={handleSave}
+                    disabled={loading}>
+                    <Text style={ui.buttonText}>Add an expense</Text>
+                </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     );
 }

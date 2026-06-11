@@ -4,6 +4,7 @@ import { PieChart, LineChart } from "react-native-chart-kit";
 import { useAppSelector } from "@/src/store/hooks";
 import { ui } from "@/src/styles/uiStyles";
 import { AppTheme } from "@/constants/theme";
+import { StatColors } from "@/constants/statsColors";
 
 export default function StatsScreen() {
   const expenses = useAppSelector((state) => state.expenses.items)
@@ -22,15 +23,6 @@ export default function StatsScreen() {
     }, {} as Record<string, number>
 
   );
-
-  const colors = [
-    "#1f57b1",
-    "#60A5FA",
-    "#4665a9",
-    "#113154",
-    "#0e1f4d",
-    "#3889ac",
-  ];
 
   const monthlyTotals = expenses.reduce(
     (acc, expense) => {
@@ -58,7 +50,7 @@ export default function StatsScreen() {
     ([category, amount], index) => ({
       name: category,
       amount,
-      color:  colors[index % 6],
+      color:  StatColors[index % 6],
       legendFontColor: '#E6EDF7',
       legendFontSize: 12
     })
