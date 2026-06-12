@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+
 import { AppTheme, Spacing } from "../../constants/theme";
 
 export const ui = StyleSheet.create({

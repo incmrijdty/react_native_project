@@ -48,3 +48,7 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+
+the link for the eas build: 
+https://expo.dev/accounts/alesia.sichova/projects/react_native_project/builds/7d72485d-d93e-4686-b7df-507ad5f43584

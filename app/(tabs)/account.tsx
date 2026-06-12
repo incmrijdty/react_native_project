@@ -1,18 +1,30 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
+import { useState } from "react";
 import { router } from "expo-router";
 
 import { useAuth } from "@/src/context/AuthContext";
 import { signOut } from "@/src/services/auth";
 import { ui } from "@/src/styles/uiStyles";
+import { AppTheme } from "@/constants/theme";
 
 export default function AccountScreen() {
   const { user, loading } = useAuth();
+  const [loadingState, setLoadingState] = useState(false); 
 
   async function handleLogout() {
-    const { error } = await signOut();
+    try {
+      setLoadingState(true);
 
-    if (error) {
-      console.log(error.message);
+      const { error } = await signOut();
+
+      if (error) {
+        Alert.alert(error.message);
+      }
+
+    } catch {
+      Alert.alert("Error", "Could not sign you in");
+    } finally {
+      setLoadingState(false);
     }
   }
 
@@ -48,9 +60,15 @@ export default function AccountScreen() {
             <Text style={ui.subtitle}>{user.email}</Text>
 
             <Text style={ui.subtitle}>Status: Connected to cloud sync</Text>
-
-            <TouchableOpacity style={ui.buttonPrimary} onPress={handleLogout}>
-              <Text style={ui.buttonText}>Logout</Text>
+            <TouchableOpacity style={ui.buttonPrimary} onPress={handleLogout} disabled={loadingState}>
+              {loadingState ? (
+                <>
+                  <ActivityIndicator color={AppTheme.dark.text} />
+                  <Text style={ui.buttonText}>Loading...</Text>
+                </>
+              ) : (
+                <Text style={ui.buttonText}>Logout</Text>
+              )}
             </TouchableOpacity>
           </>
         )}

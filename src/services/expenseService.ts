@@ -1,5 +1,4 @@
 import { Expense } from "../features/expenses/expenseTypes";
-
 import { loadExpenses, saveExpenses } from "./storage";
 import { createExpense, deleteExpenseCloud, updateExpenseCloud } from "./expenseApi";
 import { deleteReceipt } from "./storageApi";

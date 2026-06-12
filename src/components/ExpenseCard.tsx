@@ -1,5 +1,6 @@
 import React, { memo } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+
 import { Expense } from "../features/expenses/expenseTypes";
 import { AppTheme } from "@/constants/theme";
 import { ui } from "../styles/uiStyles";
