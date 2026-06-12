@@ -107,7 +107,7 @@ export default function AddExpense() {
             setImage(null);
 
             router.replace("/");
-        } catch (error) {
+        } catch {
             Alert.alert("Error", "Could not save expense");
         } finally {
             setLoading(false);

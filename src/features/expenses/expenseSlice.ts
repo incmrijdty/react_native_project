@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Expense } from "./expenseTypes";
-import { act } from "react";
 
 interface ExpensesState {
   items: Expense[];

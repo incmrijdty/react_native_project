@@ -57,7 +57,7 @@ export function AppDataProvider({
         }
 
         loadData();
-    }, [user]);
+    }, [user, dispatch]);
 
     if (loading) {
         return (

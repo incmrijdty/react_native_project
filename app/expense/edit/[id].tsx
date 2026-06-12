@@ -32,7 +32,7 @@ export default function EditExpenseScreen() {
 
     const [title, setTitle] = useState(expense?.title ?? '');
     const [amount, setAmount] = useState(expense?.amount.toString() ?? '');
-    const [currency, setCurrency] = useState("PLN");
+    const [currency, setCurrency] = useState(expense?.currency ?? 'PLN');
     const [category, setCategory] = useState(expense?.category ?? '');
     const [image, setImage] = useState(expense?.imageUrl ?? null)
 
@@ -121,7 +121,7 @@ export default function EditExpenseScreen() {
             );
 
             router.back();
-        }  catch (error) {
+        }  catch {
             Alert.alert("Error", "Could not update expense");
         } finally {
             setLoading(false);

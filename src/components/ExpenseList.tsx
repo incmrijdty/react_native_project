@@ -1,4 +1,4 @@
-import { FlatList, View } from "react-native";
+import { FlatList } from "react-native";
 import { Expense } from "../features/expenses/expenseTypes";
 import ExpenseCard from "./ExpenseCard";
 

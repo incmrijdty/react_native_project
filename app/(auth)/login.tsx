@@ -1,15 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Alert, TouchableOpacity, TextInput, View, Text } from 'react-native';
-import { router } from "expo-router";
 
 import { signIn } from "@/src/services/auth";
-import { useAuth } from "@/src/context/AuthContext";
 import { ui } from "@/src/styles/uiStyles";
 
 export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { user, loading } = useAuth();
 
     async function handleLogin() {
         const { error } = await signIn(email, password);

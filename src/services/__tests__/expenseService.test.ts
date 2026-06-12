@@ -1,6 +1,10 @@
+import * as expenseApi from "../expenseApi";
+import { createExpenseForCurrentUser, deleteExpenseForCurrentUser, updateExpenseForCurrentUser } from "../expenseService";
+
 jest.mock(
   "@react-native-async-storage/async-storage",
   () =>
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     require(
       "@react-native-async-storage/async-storage/jest/async-storage-mock"
     )
@@ -16,9 +20,6 @@ jest.mock("../expenseApi", () => ({
   deleteExpenseCloud: jest.fn(),
   updateExpenseCloud: jest.fn(),
 }));
-
-import * as expenseApi from "../expenseApi";
-import { createExpenseForCurrentUser, deleteExpenseForCurrentUser, updateExpenseForCurrentUser } from "../expenseService";
 
 
 test("creates cloud expense when user is logged in", async () => {

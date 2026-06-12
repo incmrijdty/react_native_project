@@ -1,16 +1,17 @@
-jest.mock(
-  "@react-native-async-storage/async-storage",
-  () =>
-    require(
-      "@react-native-async-storage/async-storage/jest/async-storage-mock"
-    )
-);
-
 import {
   saveExpenses,
   loadExpenses,
   clearGuestExpenses,
 } from "../storage";
+
+jest.mock(
+  "@react-native-async-storage/async-storage",
+  () =>
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require(
+      "@react-native-async-storage/async-storage/jest/async-storage-mock"
+    )
+);
 
 test("saves expenses", async () => {
   const expenses = [
