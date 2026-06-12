@@ -1,15 +1,16 @@
-import { View, Button, Image, Alert, Text } from "react-native";
+import { View, Button, Image, Alert, Text, TouchableOpacity } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera"
 import { useRef, useState, useCallback } from "react";
-import { useRouter, useFocusEffect } from "expo-router";
+import { useRouter, useFocusEffect, useLocalSearchParams } from "expo-router";
+
 import { ui } from "@/src/styles/uiStyles";
-import { TouchableOpacity } from "react-native";
 
 export default function CameraScreen() {
     const [permission, requestPermission] = useCameraPermissions();
     const cameraRef = useRef<any>(null);
     const [photo, setPhoto] = useState<string | null>(null);
     const router =  useRouter();
+    const params = useLocalSearchParams<{ returnTo?: string; expenseId?: string }>();
 
     useFocusEffect(
         useCallback(() => {
@@ -37,10 +38,29 @@ export default function CameraScreen() {
                     <Image source={{ uri: photo }} style={ui.cameraContainer} />
                     <View style={ui.cameraActions}>
                         <TouchableOpacity style={ui.cameraButton} onPress={() => {
-                            router.push({
-                                pathname: "/add",
-                                params: { image: photo }
-                            });
+                            if (!params.expenseId) {
+                                return;
+                            }
+                            
+                            if (params.returnTo === "edit") {
+                                router.push({
+                                    pathname: "/expense/edit/[id]",
+                                    params: {
+                                        id: params.expenseId,
+                                        image: photo,
+                                    },
+                                });
+
+                                return;
+                            }
+                            else {
+                                router.push({
+                                    pathname: "/add",
+                                    params: {
+                                        image: photo,
+                                    },
+                                });
+                            } 
                         }}>
                             <Text style={ui.buttonText}>Use this photo</Text>
                         </TouchableOpacity>

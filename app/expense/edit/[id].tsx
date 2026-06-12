@@ -1,26 +1,31 @@
-import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 import { useLocalSearchParams, router } from "expo-router";
 import { useState }from "react";
-import * as ImagePicker from 'expo-image-picker';
-import { Picker } from "@react-native-picker/picker";
+import { View, Text, Alert, TouchableOpacity, ActivityIndicator } from "react-native";
 
-import { View, Text, TextInput, Alert, Image, TouchableOpacity } from "react-native";
+import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 import { useAuth } from "@/src/context/AuthContext";
 import { uploadReceipt, deleteReceipt } from "@/src/services/storageApi";
 import { updateExpenseForCurrentUser } from "@/src/services/expenseService";
 import { updateExpense } from "@/src/features/expenses/expenseSlice";
 import { ui } from "@/src/styles/uiStyles";
-import { currencies } from "@/constants/currencies";
+import { pickImageFromGallery } from "@/src/services/imageService";
+import ReceiptPreview from "@/src/components/ReceiptPreview";
+import ExpenseForm from "@/src/components/ExpenseForm";
+import { validateExpense } from "@/src/utils/validation";
+import { AppTheme } from "@/constants/theme";
 
 export default function EditExpenseScreen() {
-    const { id } = useLocalSearchParams();
+    const params = useLocalSearchParams();
+    const id = typeof params.id === "string"
+        ? params.id
+        : undefined;
+        
     const { user } = useAuth();
     const dispatch = useAppDispatch();
 
     const [loading, setLoading] = useState(false);
 
-    const expense = useAppSelector(state => 
-        state.expenses.items.find(
+    const expense = useAppSelector(state => state.expenses.items.find(
             (item) => item.id === id
         )
     );
@@ -31,18 +36,15 @@ export default function EditExpenseScreen() {
     const [category, setCategory] = useState(expense?.category ?? '');
     const [image, setImage] = useState(expense?.imageUrl ?? null)
 
-    const pickImage = async () => {
-        const result =
-            await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ['images'],
-                quality: 0.7,
-                allowsEditing: true,
-            });
+    const handlePickImage = async () => {
+        try {
+            const uri = await pickImageFromGallery();
 
-        if (!result.canceled) {
-            setImage(
-                result.assets[0].uri
-            );
+            if (uri) {
+                setImage(uri);
+            }
+        } catch {
+            Alert.alert("Permission required");
         }
     }
 
@@ -50,11 +52,19 @@ export default function EditExpenseScreen() {
         try {  
             setLoading(true);
 
-            if (!title || !amount) {
-                Alert.alert(
-                    "Validation",
-                    "Title and amount are required."
+            const validationError =
+                validateExpense(
+                    title,
+                    amount
                 );
+
+            if (validationError) {
+
+                Alert.alert(
+                    "Invalid expense",
+                    validationError
+                );
+
                 return;
             }
 
@@ -112,7 +122,6 @@ export default function EditExpenseScreen() {
 
             router.back();
         }  catch (error) {
-            console.log("SAVE  ERROR:", error);
             Alert.alert("Error", "Could not update expense");
         } finally {
             setLoading(false);
@@ -122,61 +131,36 @@ export default function EditExpenseScreen() {
     return (
         <View style={ui.screen}>
             <View style={ui.container}>
-                <Text style={ui.subtitle}>Title</Text>
-                <TextInput
-                    value={title}
-                    onChangeText={setTitle}
-                    placeholderTextColor="#777"
-                    style={ui.input}
+                <ExpenseForm
+                    title={title}
+                    setTitle={setTitle}
+                    amount={amount}
+                    setAmount={setAmount}
+                    category={category}
+                    setCategory={setCategory}
+                    currency={currency}
+                    setCurrency={setCurrency}
+                    image={image}
+                    setImage={setImage}
                 />
 
-                <Text style={ui.subtitle}>Amount</Text>
-                <TextInput
-                    value={amount}
-                    onChangeText={setAmount}
-                    keyboardType="numeric"
-                    placeholderTextColor="#777"
-                    style={ui.input}
+                <ReceiptPreview
+                    image={image}
+                    onRemove={() => setImage(null)}
+                    onPickImage={handlePickImage}
+                    returnTo={"edit"}
+                    expenseId={id}
                 />
 
-                <Text style={ui.subtitle}>Currency</Text>
-                <Picker 
-                    selectedValue={currency}
-                    onValueChange={setCurrency}
-                >
-                    {currencies.map((item) => (
-                        <Picker.Item
-                            key={item}
-                            label={item}
-                            value={item}
-                        />
-                    ))}
-                </Picker>
-
-                <Text style={ui.subtitle}>Category</Text>
-                <TextInput
-                    value={category}
-                    onChangeText={setCategory}
-                    placeholderTextColor="#777"
-                    style={ui.input}
-                />
-
-                {image && (
-                    <Image
-                        source={{ uri: image }}
-                        style={{
-                            width: "100%",
-                            height: 200,
-                        }}
-                    />
-                )}
-
-                <TouchableOpacity style={ui.buttonPrimary} onPress={pickImage}>
-                    <Text style={ui.buttonText}>Change receipt</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={ui.buttonPrimary} onPress={handleSave}>
-                    <Text style={ui.buttonText}>Save changes</Text>
+                <TouchableOpacity style={ui.buttonPrimary} onPress={handleSave} disabled={loading}>
+                    {loading ? (
+                        <>
+                            <ActivityIndicator color={AppTheme.dark.text} />
+                            <Text style={ui.buttonText}>Saving...</Text>
+                        </>
+                    ) : (
+                        <Text style={ui.buttonText}>Save changes</Text>
+                    )}
                 </TouchableOpacity>
             </View>
         </View>

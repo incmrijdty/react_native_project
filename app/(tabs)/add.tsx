@@ -1,17 +1,19 @@
-import { View, Text, TouchableOpacity, TextInput, Image, Alert, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, Alert, ScrollView, ActivityIndicator } from "react-native";
 import { useState, useEffect } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import * as ImagePicker from 'expo-image-picker';
-import { Picker } from "@react-native-picker/picker";
 
 import { useAppDispatch } from "@/src/store/hooks";
 import { addExpense } from "@/src/features/expenses/expenseSlice";
 import { useAuth } from "@/src/context/AuthContext";
 import { createExpenseForCurrentUser } from "@/src/services/expenseService";
 import { uploadReceipt } from "@/src/services/storageApi";
+import { pickImageFromGallery } from "@/src/services/imageService";
 import { ui } from "@/src/styles/uiStyles";
-import { currencies } from "@/constants/currencies";
 import { AppTheme } from "@/constants/theme";
+import { validateExpense } from "@/src/utils/validation";
+import ReceiptPreview from "@/src/components/ReceiptPreview";
+import ExpenseForm from "@/src/components/ExpenseForm";
+
 
 export default function AddExpense() {
     const dispatch = useAppDispatch();
@@ -19,27 +21,21 @@ export default function AddExpense() {
     const [image, setImage] = useState<string | null>(null);
     const [title, setTitle] = useState('');
     const [amount, setAmount] = useState('');
-    const [category, setCategory] = useState("");
+    const [category, setCategory] = useState('');
     const [loading, setLoading] = useState(false);
     const [currency, setCurrency] = useState("PLN");
 
     const { user } = useAuth();
 
-    const pickImage = async () => {
-        const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const handlePickImage = async () => {
+        try {
+            const uri = await pickImageFromGallery();
 
-        if (!permission.granted) {
-            alert("Permission to access gallery is required!");
-        }
-
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ['images'],
-            quality: 0.7,
-            allowsEditing: true,
-        });
-
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
+            if (uri) {
+                setImage(uri);
+            }
+        } catch {
+            Alert.alert("Permission required");
         }
     }
 
@@ -54,15 +50,21 @@ export default function AddExpense() {
         try {
             setLoading(true);
 
-            if (!title.trim() || !amount.trim()) 
-                {
-                    Alert.alert(
-                        "Required fields",
-                        'Please enter both a title and an amount.'
-                    );
+            const validationError =
+                validateExpense(
+                    title,
+                    amount
+                );
 
-                    return;
-                }
+            if (validationError) {
+
+                Alert.alert(
+                    "Invalid expense",
+                    validationError
+                );
+
+                return;
+            }
 
             let uploadedImageUrl = image;
 
@@ -78,21 +80,10 @@ export default function AddExpense() {
                 }
             }
 
-            const parsedAmount = parseFloat(amount);
-
-            if (isNaN(parsedAmount) || parsedAmount <= 0) {
-                Alert.alert(
-                    "Invalid amount",
-                    "Please enter a valid number greater than 0."
-                );
-
-                return;
-            }
-
             const newExpense = {
                 id: Date.now().toString(),
                 title,
-                amount: parsedAmount,
+                amount: parseFloat(amount),
                 category: category || "general",
                 date: new Date().toISOString(),
                 currency,
@@ -133,112 +124,38 @@ export default function AddExpense() {
         >
             <View style={ui.container}>
                 <Text style={ui.title}>Add an expense</Text>
-                <Text style={ui.subtitle}>Title</Text>
-                <TextInput
-                    value={title}
-                    onChangeText={setTitle}
-                    placeholder="Enter title"
-                    placeholderTextColor="#777"
-                    style={ui.input}
+                <ExpenseForm 
+                    title={title}
+                    setTitle={setTitle}
+                    amount={amount}
+                    setAmount={setAmount}
+                    category={category}
+                    setCategory={setCategory}
+                    currency={currency}
+                    setCurrency={setCurrency}
+                    image={image}
+                    setImage={setImage}
                 />
 
-                <Text style={ui.subtitle}>Amount</Text>
-                <TextInput
-                    value={amount}
-                    onChangeText={setAmount}
-                    keyboardType="numeric"
-                    placeholder="Enter amount"
-                    placeholderTextColor="#777"
-                    style={ui.input}
+                <ReceiptPreview
+                    image={image}
+                    onRemove={() => setImage(null)}
+                    onPickImage={handlePickImage}
+                    returnTo="/add"
                 />
-
-                <Text style={ui.subtitle}>Currency</Text>
-                <Picker 
-                    selectedValue={currency}
-                    onValueChange={setCurrency}
-                >
-                    {currencies.map((item) => (
-                        <Picker.Item
-                            key={item}
-                            label={item}
-                            value={item}
-                        />
-                    ))}
-                </Picker>
-
-                <Text style={ui.subtitle}>Category</Text>
-                <TextInput
-                    value={category}
-                    onChangeText={setCategory}
-                    placeholder="Enter category"
-                    placeholderTextColor="#777"
-                    style={ui.input}
-                />
-
-                {image && (
-                    <>
-                        <Image source={{ uri: image }} style={ui.photo} />
-                        <TouchableOpacity
-                            style={[
-                                ui.buttonPrimary,
-                                {
-                                    padding: 10,
-                                }
-                            ]}
-                            onPress={() => {
-                                Alert.alert(
-                                    "Receipt photo",
-                                    "What would you like to do?",
-                                    [
-                                        {
-                                            text: "Keep",
-                                            style: "cancel"
-                                        },
-                                        {
-                                            text: "Retake",
-                                            onPress: () => router.push("/camera")
-                                        },
-                                        {
-                                            text: "Cancel photo",
-                                            style: "destructive",
-                                            onPress: () => setImage(null),
-                                        },
-                                    ]
-                                );
-                            }}
-                        >
-
-                            <Text style={ui.buttonText}>Manage photo</Text>
-                        </TouchableOpacity>
-                    </>
-                )}
-
-                {!image && (
-                    <TouchableOpacity style={ui.buttonPrimary} onPress={() => {
-                        Alert.alert(
-                            "Adding a receipt photo",
-                            "How would you like to add a photo?",
-                            [
-                                {
-                                    text: "Open Camera",
-                                    onPress: () => router.push("/camera")
-                                },
-                                {
-                                    text: "Pick from Galery",
-                                    onPress: pickImage
-                                }
-                            ]
-                        )
-                    }}>
-                        <Text style={ui.buttonText}>Add a receipt</Text>
-                    </TouchableOpacity>
-                )}
 
                 <TouchableOpacity
                     style={ui.buttonPrimary}
                     onPress={handleSave}
                     disabled={loading}>
-                    <Text style={ui.buttonText}>Add an expense</Text>
+                    {loading ? (
+                        <>
+                            <ActivityIndicator color={AppTheme.dark.text} />
+                            <Text style={ui.buttonText}>Creating...</Text>
+                        </>
+                    ) : (
+                        <Text style={ui.buttonText}>Add an expense</Text>
+                    )}
                 </TouchableOpacity>
             </View>
         </ScrollView>

@@ -1,7 +1,6 @@
 import { FlatList, View } from "react-native";
 import { Expense } from "../features/expenses/expenseTypes";
-import ExpenseCard from "./expense-card";
-import { ui } from "../styles/uiStyles";
+import ExpenseCard from "./ExpenseCard";
 
 interface Props {
     expenses: Expense[];

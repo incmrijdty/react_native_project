@@ -2,7 +2,7 @@ import { View, Text, Alert, useWindowDimensions } from "react-native";
 import { router } from "expo-router";
 
 import { useAppSelector, useAppDispatch } from "@/src/store/hooks";
-import ExpenseList from "@/src/components/expense-list";
+import ExpenseList from "@/src/components/ExpenseList";
 import { deleteExpense } from "@/src/features/expenses/expenseSlice";
 import { deleteExpenseForCurrentUser } from "@/src/services/expenseService";
 import { useAuth } from "@/src/context/AuthContext";
@@ -74,12 +74,12 @@ export default function Dashboard() {
 
         <Text style={ui.title}>Your Expense Tracker</Text>
 
-        <Text style={ui.subtitle}>Total: {total.toFixed(2)}zl</Text>
+        <Text style={ui.subtitle}>Total: {total.toFixed(2)} zl</Text>
 
         <Text style={ui.subtitle}>Recent Expenses</Text>
 
         <ExpenseList
-          expenses={expenses.slice(-3).reverse()}
+          expenses={expenses.slice(-3)}
           onDelete={handleDelete}
           onPress={handlePress}
         />

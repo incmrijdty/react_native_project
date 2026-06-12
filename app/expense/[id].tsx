@@ -74,7 +74,7 @@ export default function ExpenseDetailsScreen() {
                 {expense.imageUrl && (
                     <Image
                         source={{ uri: expense.imageUrl }}
-                        style={styles.image}
+                        style={ui.photo}
                     />
                 )}
 
