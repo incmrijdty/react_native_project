@@ -1,54 +1,135 @@
-# Welcome to your Expo app 👋
+# Expense Tracker
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplikacja mobilna do zarządzania osobistymi wydatkami stworzona w React Native.
 
-## Get started
+Celem aplikacji jest ułatwienie użytkownikowi zapisywania, organizowania i analizowania swoich wydatków. 
+Użytkownik może dodawać wydatki, przypisywać im kategorie, wybierać walutę, dodawać zdjęcia paragonów oraz przeglądać statystyki swoich wydatków.
 
-1. Install dependencies
+Aplikacja obsługuje zarówno tryb gościa z lokalnym zapisem danych, jak i konta użytkowników z synchronizacją danych w chmurze.
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Start the app
+## Główne funkcjonalności
 
-   ```bash
-   npx expo start
-   ```
+- Dodawanie nowych wydatków
+- Edycja istniejących wydatków
+- Usuwanie wydatków z potwierdzeniem
+- Kategorie wydatków
+- Wybór waluty
+- Dodawanie zdjęć paragonów
+- Robienie zdjęć przy użyciu aparatu
+- Podgląd szczegółów wydatku
+- Statystyki wydatków
+- Logowanie użytkownika
+- Synchronizacja danych z chmurą
+- Obsługa trybu offline dla wydatków gościa
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Ekrany aplikacji
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Dashboard
+- Podsumowanie wydatków
+- Całkowita kwota wydatków
+- Lista ostatnich wydatków
+- Przejście do szczegółów wydatku
 
-## Get a fresh project
+### Dodawanie wydatku
+- Wprowadzanie tytułu
+- Wprowadzanie kwoty
+- Wybór kategorii
+- Wybór waluty
+- Dodanie zdjęcia paragonu
 
-When you're ready, run:
+### Szczegóły wydatku
+- Informacje o wydatku
+- Data oraz kategoria
+- Podgląd zdjęcia paragonu
+- Edycja wydatku
+- Usunięcie wydatku
+
+### Statystyki
+- Analiza wydatków
+- Podsumowanie wydatków użytkownika
+
+### Konto
+- Logowanie
+- Zarządzanie kontem użytkownika
+
+---
+
+## Technologie
+
+Projekt został wykonany przy użyciu:
+
+- React Native
+- Expo
+- TypeScript
+- Expo Router
+- Redux Toolkit
+- Supabase
+- AsyncStorage
+
+---
+
+# Uruchomienie projektu
+
+## 1. Pobranie projektu
+
+1) Sklonuj repozytorium:
 
 ```bash
-npm run reset-project
+   git clone <repository-url>
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2) Przejdź do folderu projektu i instaluj zależności
 
-## Learn more
+```bash
+   cd react_native_project
+   npm install
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+3) Konfiguruj zmiennych środowiskowych
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+W głównym folderze projektu utwórz plik:
 
-## Join the community
+.env
 
-Join our community of developers creating universal apps.
+Następnie dodaj konfigurację Supabase:
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+EXPO_PUBLIC_SUPABASE_URL=twoj_supabase_url
 
+EXPO_PUBLIC_SUPABASE_ANON_KEY=twoj_supabase_anon_key
 
-the link for the eas build: 
-https://expo.dev/accounts/alesia.sichova/projects/react_native_project/builds/7d72485d-d93e-4686-b7df-507ad5f43584
+4) Uruchom serwer Expo:
+
+```bash
+   npx expo start
+```
+
+Android: 
+Aby uruchomić aplikację na Androidzie:
+
+```bash
+   npm run android
+```
+
+iOS: 
+Aby uruchomić aplikację na iOS:
+
+```bash
+   npm run ios
+```
+
+Testy:
+Aby uruchomić testy:
+
+```bash
+   npm test
+```
+Budowanie aplikacji:
+Do stworzenia wersji Android można użyć:
+
+```bash
+   eas build --platform android --profile preview
+```
