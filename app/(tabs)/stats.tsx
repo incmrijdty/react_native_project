@@ -60,8 +60,7 @@ export default function StatsScreen() {
         </Text>
 
         <Text style={ui.subtitle}>
-          Average expense:
-          {averageExpense.toFixed(2)} zl
+          Average expense: {averageExpense.toFixed(2)} zl
         </Text>
 
         {largestExpense && (
