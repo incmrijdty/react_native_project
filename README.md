@@ -33,6 +33,7 @@ Aplikacja obsługuje zarówno tryb gościa z lokalnym zapisem danych, jak i kont
 - Całkowita kwota wydatków
 - Lista ostatnich wydatków
 - Przejście do szczegółów wydatku
+![alt text](image-4.png)
 
 ### Dodawanie wydatku
 - Wprowadzanie tytułu
@@ -40,6 +41,7 @@ Aplikacja obsługuje zarówno tryb gościa z lokalnym zapisem danych, jak i kont
 - Wybór kategorii
 - Wybór waluty
 - Dodanie zdjęcia paragonu
+![alt text](image-6.png)
 
 ### Szczegóły wydatku
 - Informacje o wydatku
@@ -47,14 +49,19 @@ Aplikacja obsługuje zarówno tryb gościa z lokalnym zapisem danych, jak i kont
 - Podgląd zdjęcia paragonu
 - Edycja wydatku
 - Usunięcie wydatku
+![alt text](image-7.png)
 
 ### Statystyki
 - Analiza wydatków
 - Podsumowanie wydatków użytkownika
+![alt text](image-5.png)
 
 ### Konto
 - Logowanie
 - Zarządzanie kontem użytkownika
+![alt text](image-1.png)
+![alt text](image-2.png)
+![alt text](image-3.png)
 
 ---
 
