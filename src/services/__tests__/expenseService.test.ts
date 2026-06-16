@@ -10,7 +10,7 @@ jest.mock(
     )
 );
 
-jest.mock("../storageApi", () => ({
+jest.mock("../receiptApi", () => ({
   uploadReceipt: jest.fn(),
   deleteReceipt: jest.fn(),
 }));
