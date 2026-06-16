@@ -1,5 +1,5 @@
 import { Expense } from "../features/expenses/expenseTypes";
-import { loadExpenses, saveExpenses } from "./storage";
+import { loadExpenses, saveExpenses } from "./asyncStorage";
 import { createExpense, deleteExpenseCloud, updateExpenseCloud } from "./expenseApi";
 import { deleteReceipt } from "./receiptApi";
 

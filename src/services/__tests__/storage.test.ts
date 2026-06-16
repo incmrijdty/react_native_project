@@ -2,7 +2,7 @@ import {
   saveExpenses,
   loadExpenses,
   clearGuestExpenses,
-} from "../storage";
+} from "../asyncStorage";
 
 jest.mock(
   "@react-native-async-storage/async-storage",

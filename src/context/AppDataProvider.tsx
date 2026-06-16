@@ -4,7 +4,7 @@ import { View, Text, ActivityIndicator } from "react-native";
 import { useAuth } from "./AuthContext";
 import { useAppDispatch } from "../store/hooks";
 import { setExpenses } from "../features/expenses/expenseSlice";
-import { loadExpenses, clearGuestExpenses } from "../services/storage";
+import { loadExpenses, clearGuestExpenses } from "../services/asyncStorage";
 import { fetchExpenses } from "../services/expenseApi";
 import { syncGuestExpensesToCloud } from "../services/syncExpenses";
 
