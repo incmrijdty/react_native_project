@@ -6,7 +6,7 @@ import { useAppDispatch } from "@/src/store/hooks";
 import { addExpense } from "@/src/features/expenses/expenseSlice";
 import { useAuth } from "@/src/context/AuthContext";
 import { createExpenseForCurrentUser } from "@/src/services/expenseService";
-import { uploadReceipt } from "@/src/services/storageApi";
+import { uploadReceipt } from "@/src/services/receiptApi";
 import { pickImageFromGallery } from "@/src/services/imageService";
 import { ui } from "@/src/styles/uiStyles";
 import { AppTheme } from "@/constants/theme";

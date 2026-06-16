@@ -4,7 +4,7 @@ import { View, Text, Alert, TouchableOpacity, ActivityIndicator } from "react-na
 
 import { useAppDispatch, useAppSelector } from "@/src/store/hooks";
 import { useAuth } from "@/src/context/AuthContext";
-import { uploadReceipt, deleteReceipt } from "@/src/services/storageApi";
+import { uploadReceipt, deleteReceipt } from "@/src/services/receiptApi";
 import { updateExpenseForCurrentUser } from "@/src/services/expenseService";
 import { updateExpense } from "@/src/features/expenses/expenseSlice";
 import { ui } from "@/src/styles/uiStyles";
