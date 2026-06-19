@@ -140,3 +140,7 @@ Do stworzenia wersji Android można użyć:
 ```bash
    eas build --platform android --profile preview
 ```
+
+
+the link for the eas build: 
+https://expo.dev/accounts/alesia.sichova/projects/react_native_project/builds/7d72485d-d93e-4686-b7df-507ad5f43584
